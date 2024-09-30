@@ -1,0 +1,19 @@
+.parent {
+
+    border-bottom: 1px solid rgb(170, 170, 170);
+
+    .logo, .links, .action {
+        flex: 1;
+    }
+
+    .logo {
+        p {
+            font-weight: 700;
+            font-size: 32px;
+        }
+    }
+
+    .action {
+        font-size: 18px;
+    }
+}

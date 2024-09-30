@@ -1,6 +1,5 @@
-import React from 'react'
-import styles from './notification.module.scss';
 import { Link } from 'react-router-dom';
+import styles from './notification.module.scss';
 
 const Notification = () => {
     return (
