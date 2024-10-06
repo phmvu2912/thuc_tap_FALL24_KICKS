@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import Card from "../../../../components/(client)/Card/Card"
-import Header from "../../../../components/(client)/Header/HeaderClient"
 
 // css
 import styles from './homepage.module.scss'
+import Slider from "../../../../components/(client)/Slider/Slider"
 
 const Homepage = () => {
 
@@ -17,6 +17,10 @@ const Homepage = () => {
     return (
         <>
             <section>
+                <Slider />
+            </section>
+
+            <section>
                 <div className="container mx-auto">
 
                     {/* New Products */}
@@ -27,7 +31,7 @@ const Homepage = () => {
                             </h2>
                         </div>
 
-                        <div className={`${styles['contentNewProducts']} flex justify-between items-start`}>
+                        <div className={`${styles['contentNewProducts']} flex justify-between items-start gap-4`}>
                             {
                                 data.map((item, index) => (
                                     <Card props={item} key={index} />

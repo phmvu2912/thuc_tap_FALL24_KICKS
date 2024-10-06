@@ -1,23 +1,27 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import styles from './notification.module.scss';
 
 const Notification = () => {
+
+    const [visible, setVisable] = useState<boolean>(false)
+
+    const handleClick = () => {
+        setVisable(true)
+    }
+
+    // console.log(visible)
+
     return (
         <>
-            <div className={`${styles['parent']} py-3 `}>
+            <div className={`${styles['parent']} py-3 ${visible && 'hidden'}`}>
                 <div className={`${styles['content']} container mx-auto flex items-center justify-between `}>
                     <p className='space-x-2'>
-                        <span>
+                        <span className=''>
                             Khuyến mãi đợt hè đang diễn ra - Giảm tối đa 50%
                         </span>
 
-                        <Link to={''} className='underline'>Xem chi tiết</Link>
+                        <b className={`cursor-pointer hover:underline`} onClick={handleClick}>Ẩn thông báo</b>
                     </p>
-
-                    {/* Đóng noti */}
-                    <div className="">
-                        X
-                    </div>
                 </div>
             </div>
         </>

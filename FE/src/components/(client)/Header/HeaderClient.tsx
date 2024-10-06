@@ -1,6 +1,6 @@
-import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons"
-import Search from "antd/es/input/Search"
-import { Link, NavLink } from "react-router-dom"
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import Search from "antd/es/input/Search";
+import { Link, NavLink } from "react-router-dom";
 
 // css
 import styles from './headerClient.module.scss';
@@ -17,19 +17,47 @@ const Header = () => {
                     <div className={`${styles['links']}`}>
                         <ul className="flex justify-between items-center space-x-6">
                             <li>
-                                <NavLink to={''}>Trang chủ</NavLink>
+                                <NavLink
+                                    to="/"
+                                    className={({ isActive }) =>
+                                        isActive ? "text-[#DB4444] font-bold" : "text-black"
+                                    }
+                                >
+                                    Trang chủ
+                                </NavLink>
                             </li>
 
                             <li>
-                                <NavLink to={''}>Trang chủ</NavLink>
+                                <NavLink
+                                    to="/products"
+                                    className={({ isActive }) =>
+                                        isActive ? "text-[#DB4444] font-bold" : "text-black"
+                                    }
+                                >
+                                    Sản phẩm
+                                </NavLink>
                             </li>
 
                             <li>
-                                <NavLink to={''}>Trang chủ</NavLink>
+                                <NavLink
+                                    to="/contact"
+                                    className={({ isActive }) =>
+                                        isActive ? "text-[#DB4444] font-bold" : "text-black"
+                                    }
+                                >
+                                    Liên hệ
+                                </NavLink>
                             </li>
 
                             <li>
-                                <NavLink to={''}>Trang chủ</NavLink>
+                                <NavLink
+                                    to="/about"
+                                    className={({ isActive }) =>
+                                        isActive ? "text-[#DB4444] font-bold" : "text-black"
+                                    }
+                                >
+                                    Giới thiệu
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
@@ -38,19 +66,19 @@ const Header = () => {
                         <div className="search">
                             <form action="">
                                 {/* gán loading = true để hiện animation loading*/}
-                                <Search placeholder="Tìm kiếm"   /> 
+                                <Search placeholder="Tìm kiếm" />
                             </form>
-                        </div>
-
-                        <div className="wishlist">
-                            <Link to={''}>
-                                <HeartOutlined />
-                            </Link>
                         </div>
 
                         <div className="cart">
                             <Link to={''}>
                                 <ShoppingCartOutlined />
+                            </Link>
+                        </div>
+
+                        <div className="wishlist">
+                            <Link to={''}>
+                                <UserOutlined />
                             </Link>
                         </div>
                     </div>
