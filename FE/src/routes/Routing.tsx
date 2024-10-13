@@ -1,18 +1,30 @@
 import { Route, Routes } from 'react-router-dom'
-import Homepage from '../pages/layouts/(client)/Homepage/Homepage'
-import LayoutClient from '../pages/layouts/(client)/LayoutClient'
+import LayoutClient from '../pages/layouts/LayoutClient'
+import Homepage from '../pages/(client)/Homepage/Homepage'
+import NotFound from '../pages/NotFound/NotFound'
+import List_Products from '../pages/(client)/Products/List'
+import LayoutAdmin from '../pages/layouts/LayoutAdmin'
+import Dashboard from '../pages/(admin)/Dashboard/Dashboard'
 
 const Routing = () => {
     return (
         <>
             <Routes>
                 {/* Client */}
-                <Route element={<LayoutClient />}>
+                <Route path='/' element={<LayoutClient />}>
                     <Route index element={<Homepage />} />
-                    {/* <Route index element={ } />
-                    <Route index element={ } />
-                    <Route index element={ } /> */}
+                    <Route path='/products' element={<List_Products />} />
+                    <Route path='/' element={<p className='container mx-auto'>About</p>} />
+                    <Route path='/' element={<p className='container mx-auto'>Contact</p>} />
                 </Route>
+
+                {/* Admin */}
+                <Route path='/admin' element={<LayoutAdmin />}>
+                    <Route index element={<Dashboard />} />
+
+                </Route>
+
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </>
     )

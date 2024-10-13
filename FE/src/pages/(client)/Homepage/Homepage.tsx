@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom"
-import Card from "../../../../components/(client)/Card/Card"
 
 // css
 import styles from './homepage.module.scss'
-import Slider from "../../../../components/(client)/Slider/Slider"
+import Slider from "../../../components/(client)/Slider/Slider"
+import Card from "../../../components/(client)/Card/Card"
+import { serviceImg, serviceImg2, serviceImg3 } from "../../../constants/client"
 
 const Homepage = () => {
 
@@ -16,10 +17,12 @@ const Homepage = () => {
 
     return (
         <>
+            {/* Carousel */}
             <section>
                 <Slider />
             </section>
 
+            {/* Products */}
             <section>
                 <div className="container mx-auto">
 
@@ -55,6 +58,7 @@ const Homepage = () => {
                 </div>
             </section>
 
+            {/* Categories */}
             <section>
                 <div className="container mx-auto">
                     {/* Categories */}
@@ -89,6 +93,34 @@ const Homepage = () => {
                             <button className={`${styles['btn']} px-6 py-2 rounded-md`}>
                                 Xem thêm
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Services */}
+            <section className="container mx-auto my-10">
+                <div className="flex justify-evenly">
+                    <div className="flex-1 flex flex-col items-center space-y-3">
+                        <img src={serviceImg} alt="" />
+
+                        <div className="text-center">
+                            <h5 className="font-bold text-xl">Miễn phí vận chuyển</h5>
+                            <p>Miễn phí vận chuyển cho tổng hóa đơn trên 1 triêu</p>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center space-y-3">
+                        <img src={serviceImg2} alt="" />
+                        <div className="text-center">
+                            <h5 className="font-bold text-xl">Hỗ trợ 24/7</h5>
+                            <p>Hỗ trợ thân thiện 24/7</p>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center space-y-3">
+                        <img src={serviceImg3} alt="" />
+                        <div className="text-center">
+                            <h5 className="font-bold text-xl">Hoàn trả miễn phí</h5>
+                            <p>Hỗ trợ hoàn trả trong vòng 15 ngày</p>
                         </div>
                     </div>
                 </div>

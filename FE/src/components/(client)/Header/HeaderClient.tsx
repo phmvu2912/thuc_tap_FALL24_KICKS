@@ -1,11 +1,42 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { RollbackOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import { Link, NavLink } from "react-router-dom";
 
 // css
+import { Dropdown, MenuProps, Space } from "antd";
 import styles from './headerClient.module.scss';
 
 const Header = () => {
+
+    const user = {
+        name: 'Phạm Đào Vũ',
+        email: 'phmvu2912@gmail.com'
+    }
+
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label:      
+                <div>
+                    <p className="font-semibold">{user.name}</p>
+                    <p className="text-gray-400">{user.email}</p>
+                </div>,
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '2',
+            label: <Link to={'/profile'}>Hồ sơ</Link>,
+            icon: <UserOutlined />,
+        },
+        {
+            key: '4',
+            label: <span className="text-white w-full hover:text-black flex items-center gap-2"><RollbackOutlined /> Đăng xuất</span>,
+            className: 'bg-red-500 hover:bg-red-400',
+        },
+    ];
+
     return (
         <>
             <header className={`${styles['parent']} py-6`}>
@@ -77,9 +108,13 @@ const Header = () => {
                         </div>
 
                         <div className="wishlist">
-                            <Link to={''}>
-                                <UserOutlined />
-                            </Link>
+                            <Dropdown menu={{ items }} placement="bottomRight" className="cursor-pointer">
+                                <a onClick={(e) => e.preventDefault()}>
+                                    <Space>
+                                        <UserOutlined />
+                                    </Space>
+                                </a>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>

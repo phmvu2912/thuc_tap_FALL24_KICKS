@@ -1,7 +1,8 @@
 import express from "express";
-import { getCategories } from "../controllers/categoryController.js";
+import { createCategory, getCategories } from "../controllers/categoryController.js";
 const routeCategories = express.Router();
 
-routeCategories.get('/', getCategories);  //! GET ALL   
+routeCategories.get('/', getCategories);  //! GET ALL  
+routeCategories.post('/', createCategory);  //! CREATE ONE   
 
 export default routeCategories;
