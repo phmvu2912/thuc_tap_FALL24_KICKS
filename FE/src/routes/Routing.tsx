@@ -6,6 +6,7 @@ import List_Products from '../pages/(client)/Products/List'
 import LayoutAdmin from '../pages/layouts/LayoutAdmin'
 import Dashboard from '../pages/(admin)/Dashboard/Dashboard'
 import Products_List_Admin from '../pages/(admin)/Products/List/Products_List'
+import Product_Details from '../pages/(client)/Products/Details'
 
 const Routing = () => {
     return (
@@ -14,7 +15,12 @@ const Routing = () => {
                 {/* Client */}
                 <Route path='/' element={<LayoutClient />}>
                     <Route index element={<Homepage />} />
+                    
+                    {/* Route products */}
                     <Route path='/products' element={<List_Products />} />
+                    <Route path='/product/details/:id' element={<Product_Details />} />
+                                       
+                    
                     <Route path='/' element={<p className='container mx-auto'>About</p>} />
                     <Route path='/' element={<p className='container mx-auto'>Contact</p>} />
                 </Route>

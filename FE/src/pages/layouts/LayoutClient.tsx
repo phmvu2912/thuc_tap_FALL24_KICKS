@@ -8,7 +8,7 @@ const LayoutClient = () => {
         <>
             {/* Header */}
             <Header />
-            <main className="min-h-screen">
+            <main className="min-h-screen my-20">
                 <Outlet />
             </main>
             <Footer />
