@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectMongo from './connect.js';
 import router from './routes/index.js';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const app = express();
 dotenv.config();
@@ -10,7 +11,7 @@ dotenv.config();
 // Config bodyParser
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
+app.use(cors());
 // PORT
 const port = process.env.PORT || 8000;
 

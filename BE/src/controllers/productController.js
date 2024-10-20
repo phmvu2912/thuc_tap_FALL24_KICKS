@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import productValidation from "../validation/productValidation.js";
 
 // ! GET ALL
 const getProducts = async (req, res) => {
@@ -61,5 +62,54 @@ const getProductById = async (req, res) => {
         });
     }
 };
+
+// ! CREATE ONE
+export const createProduct = async (req, res) => {
+    try {
+
+        const output = await productValidation.validate(req.body);
+
+        const product = await Product.create(output);
+
+        if (!req.body) return res.status(400).json({
+            status: false,
+            error: 'Đã xảy ra sự cố khi gửi dữ liệu lên!',
+            message: 'Tạo mới sản phẩm thành công!'
+        })
+
+        return res.status(201).json({
+            status: true,
+            data: product
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Có lỗi xảy ra khi lấy sản phẩm!'
+        });
+    }
+}
+
+// ! DELETE ONE
+export const removeProduct = async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({
+                message: 'Không tìm thấy sản phẩm!'
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: 'Xóa sản phẩm thành công!'
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Có lỗi xảy ra khi xóa bản ghi!'
+        });
+    }
+}
 
 export { getProducts, getProductById };

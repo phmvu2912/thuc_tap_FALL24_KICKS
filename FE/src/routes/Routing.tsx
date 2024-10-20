@@ -5,6 +5,7 @@ import NotFound from '../pages/NotFound/NotFound'
 import List_Products from '../pages/(client)/Products/List'
 import LayoutAdmin from '../pages/layouts/LayoutAdmin'
 import Dashboard from '../pages/(admin)/Dashboard/Dashboard'
+import Products_List_Admin from '../pages/(admin)/Products/List/Products_List'
 
 const Routing = () => {
     return (
@@ -21,6 +22,7 @@ const Routing = () => {
                 {/* Admin */}
                 <Route path='/admin' element={<LayoutAdmin />}>
                     <Route index element={<Dashboard />} />
+                    <Route path='/admin/products' element={<Products_List_Admin />} />
 
                 </Route>
 
