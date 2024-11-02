@@ -7,6 +7,7 @@ import LayoutAdmin from '../pages/layouts/LayoutAdmin'
 import Dashboard from '../pages/(admin)/Dashboard/Dashboard'
 import Products_List_Admin from '../pages/(admin)/Products/List/Products_List'
 import Product_Details from '../pages/(client)/Products/Details'
+import Search from '../pages/(client)/Search/Search'
 
 const Routing = () => {
     return (
@@ -23,6 +24,9 @@ const Routing = () => {
                     
                     <Route path='/' element={<p className='container mx-auto'>About</p>} />
                     <Route path='/' element={<p className='container mx-auto'>Contact</p>} />
+
+                    {/* Search */}
+                    <Route path='/search' element={<Search />} />
                 </Route>
 
                 {/* Admin */}

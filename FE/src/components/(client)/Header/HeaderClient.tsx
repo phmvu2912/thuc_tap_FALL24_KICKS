@@ -1,12 +1,41 @@
-import { RollbackOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { RollbackOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // css
 import { Dropdown, MenuProps, Space } from "antd";
 import styles from './headerClient.module.scss';
+import { useForm } from "react-hook-form";
+import { getProducts } from "../../../services/product";
+import { useState } from "react";
 
 const Header = () => {
+    const [query, setQuery] = useState('');
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const navigate = useNavigate();
+
+
+    // const handleSearch = async () => {
+    //     try {
+    //         console.log('search data: ', query);
+
+    //         //call api
+    //         const res = await getProducts(query);
+    //         navigate(`/search?query=${data.query}`);
+
+    //         console.log(res)
+    //     } catch (error) {
+
+    //     }
+    // }
+
+    const onSearch = (data: any) => {
+        // console.log(data.query)
+        navigate(`/search?query=${data.query}`);
+    }
+
 
     const user = {
         name: 'Phạm Đào Vũ',
@@ -16,7 +45,7 @@ const Header = () => {
     const items: MenuProps['items'] = [
         {
             key: '1',
-            label:      
+            label:
                 <div>
                     <p className="font-semibold">{user.name}</p>
                     <p className="text-gray-400">{user.email}</p>
@@ -95,9 +124,22 @@ const Header = () => {
 
                     <div className={`${styles['action']} flex justify-end items-center space-x-6`}>
                         <div className="search">
-                            <form action="">
-                                {/* gán loading = true để hiện animation loading*/}
-                                <Search placeholder="Tìm kiếm" />
+                            <form
+                                onSubmit={handleSubmit(onSearch)}
+                                className="flex items-stretch w-full"
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Tìm kiếm"
+                                    className="border p-2 text-sm outline-none"
+                                    {...register('query', { required: true })}
+                                />
+                                <button
+                                    type="submit"
+                                    className="px-3 flex items-center justify-center bg-[#DB4444]"
+                                >
+                                    <SearchOutlined />
+                                </button>
                             </form>
                         </div>
 

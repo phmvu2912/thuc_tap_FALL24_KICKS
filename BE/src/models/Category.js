@@ -11,10 +11,10 @@ const categorySchema = new Schema({
         type: String,
         unique: true,
     },
-    products: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-    }]
+    // products: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Product'
+    // }]
 });
 
 export default mongoose.model('Category', categorySchema);

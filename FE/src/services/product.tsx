@@ -1,8 +1,9 @@
+import { AxiosResponse } from "axios";
 import instacnce from "../configs/axios";
 
-export const getProducts = async () => {
+export const getProducts = async (params?: any):  Promise<AxiosResponse<any>> => {
     try {
-        const response = await instacnce.get('/products');
+        const response = await instacnce.get(`/products`, {params});
 
         if (response.statusText !== 'OK') {
             throw new Error('Error fetching products');
@@ -11,7 +12,13 @@ export const getProducts = async () => {
         return response;
     } catch (error) {
         console.error('Error:', error);
-        return null;
+        return {
+            data: null,
+            status: 500,
+            statusText: 'Internal Server Error',
+            headers: {},
+            config: {} as any,
+        }
     }
 }
 

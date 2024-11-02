@@ -4,36 +4,62 @@ import productValidation from "../validation/productValidation.js";
 // ! GET ALL
 const getProducts = async (req, res) => {
     try {
+        const { query, minPrice, maxPrice, sort } = req.query;
 
-        const products = await Product.find().populate('category').exec();
+        // Tạo bộ lọc tìm kiếm
+        const filter = {};
 
-        // * Kiểm tra xem có sản phẩm nào không
-        if (products === 0) {
-            return res.status(400).json(
-                {
-                    status: false,
-                    data: [],
-                    message: "Không có sản phẩm nào!"
-                }
-            );
+        // Thêm điều kiện tìm kiếm theo tiêu đề nếu có query
+        if (query) {
+            filter.title = { $regex: query, $options: 'i' };
         }
 
-        return res.status(200).json(
-            {
-                status: true,
-                data: products,
-                message: "Lấy danh sách sản phẩm thành công!"
-            }
-        )
+        // Thêm điều kiện lọc theo giá nếu có
+        if (minPrice || maxPrice) {
+            filter.price = {};
+            if (minPrice) filter.price.$gte = parseFloat(minPrice);
+            if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+        }
+
+        // Tạo điều kiện sắp xếp nếu có
+        const sortOptions = {};
+        if (sort) {
+            const [field, order] = sort.split(':');
+            sortOptions[field] = order === 'desc' ? -1 : 1;
+        }
+
+        console.log("Filter applied:", filter); 
+
+        // Thực hiện truy vấn sản phẩm dựa trên bộ lọc và sắp xếp
+        const products = await Product.find(filter)
+            .sort(sortOptions)
+            .populate('category')
+            .exec();
+
+        // Kiểm tra nếu không có sản phẩm nào được tìm thấy
+        if (products.length === 0) {
+            return res.status(400).json({
+                status: false,
+                data: [],
+                message: "Không có sản phẩm nào!"
+            });
+        }
+
+        // Trả về danh sách sản phẩm nếu tìm thấy
+        return res.status(200).json({
+            status: true,
+            data: products,
+            message: "Lấy danh sách sản phẩm thành công!"
+        });
 
     } catch (error) {
         console.log(error);
-
         return res.status(500).json({
             message: 'Có lỗi xảy ra khi lấy danh sách sản phẩm!'
-        })
+        });
     }
-}
+};
+
 
 // ! GET ONE
 const getProductById = async (req, res) => {

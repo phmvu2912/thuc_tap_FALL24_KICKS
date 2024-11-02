@@ -1,8 +1,10 @@
 import { CarOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Carousel, Spin } from 'antd'
+import { Button, Carousel, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
+import { TProduct, TVariants } from '../../../interfaces/product'
 import { getProductById } from '../../../services/product'
 import styles from './scss/details.module.scss'
 
@@ -10,11 +12,15 @@ const Details = () => {
 
     const { id } = useParams();
 
+    const { register, handleSubmit, reset, setValue } = useForm<TProduct>();
+
     const [activeItem, setActiveItem] = useState();
 
-    const [productPresent, setProductPresent] = useState();
+    const [productPresent, setProductPresent] = useState<TVariants>();
 
     const [imgPresent, setImgPresent] = useState<string>();
+
+    const [quantity, setQuantity] = useState(1)
 
     const { data, isError, error, isFetching, isLoading } = useQuery({
         queryKey: ['product'],
@@ -34,6 +40,7 @@ const Details = () => {
 
     const handleActive = (item: any) => {
         setActiveItem(item);
+        setValue('size', item);
     };
 
     const handleChangeVariant = (indexChange: any) => {
@@ -45,6 +52,41 @@ const Details = () => {
         setImgPresent(path)
     }
 
+    const minusBtn = () => {
+        if (quantity <= 1) {
+            return message.error('Số lượng cần ít nhất là 1');
+        }
+        const newQuantity = quantity - 1;
+        setQuantity(newQuantity);
+        setValue('quantity', newQuantity);  // Cập nhật vào React Hook Form
+    };
+
+    const plusBtn = () => {
+        if (quantity >= productPresent?.stock) {
+            return message.error('Số lượng bạn muốn không được phép vượt quá số lượng hàng trong kho!');
+        }
+        const newQuantity = quantity + 1;
+        setQuantity(newQuantity);
+        setValue('quantity', newQuantity);  // Cập nhật vào React Hook Form
+    };
+
+    console.log(quantity)
+
+    const onSubmit = (data: TProduct) => {
+
+        if (!data.size) {
+            return message.error('Vui lòng chọn một kích thước!');
+        }
+
+        console.log({
+            ...data,
+            title: product?.title,
+            color: productPresent?.color,
+            thumbnail: productPresent?.thumbnail,
+            price: productPresent?.price
+        })
+    }
+
     if (isLoading && isFetching) return <p>Loading...</p>
     if (isError) return <p>Error: {error.message}</p>
 
@@ -53,7 +95,9 @@ const Details = () => {
 
     return (
         <div className='container mx-auto space-y-16'>
-            <div className="flex items-start space-x-6 h-full">
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex items-start space-x-6 h-full">
 
                 {/* Ảnh */}
                 <div className="left flex w-[60%] space-x-4 h-full">
@@ -130,38 +174,46 @@ const Details = () => {
                     <div className="sizes flex items-stretch space-x-4">
                         <h5 className="text-lg font-semibold pt-2">Size: </h5>
                         <div className="grid grid-cols-7 gap-2">
-                            {/* Lặp qua các biến thể (variants) để hiển thị các size */}
-                            {product?.sizes.map((size: any, index: number) => (
+                            {product?.sizes.map((size, index) => (
                                 <div
                                     key={index}
                                     className={`size w-8 h-8 rounded-md border font-semibold flex justify-center items-center p-6 cursor-pointer 
-                                ${activeItem === size ? 'bg-[#DB4444] text-white' : ''}`}
+                    ${activeItem === size ? 'bg-[#DB4444] text-white' : ''}`}
                                     onClick={() => handleActive(size)}
                                 >
                                     {size}
                                 </div>
                             ))}
+                            <input type="hidden" {...register('size')} /> {/* Input ẩn để lưu giá trị size */}
                         </div>
                     </div>
 
                     {/* actions */}
-                    <div className="actions flex gap-4">
+                    {/* <form className="actions flex gap-4"> */}
+                    <div
+                        className="actions flex gap-4"
+                    >
                         <div className="flex-1 flex items-stretch gap-4">
                             <div className={`${styles['quantity']} w-full`}>
-                                <input className='w-full h-full text-center font-semibold' defaultValue={1} />
+
+                                <input
+                                    className='w-full h-full text-center font-semibold'
+                                    value={quantity}
+                                    {...register('quantity', { valueAsNumber: true })}
+                                />
 
                                 <div className={`${styles['changeQtt']}`}>
-                                    <div className="">
+                                    <div className="" onClick={() => minusBtn()}>
                                         <MinusOutlined />
                                     </div>
 
-                                    <div className="">
+                                    <div className="" onClick={() => plusBtn()}>
                                         <PlusOutlined />
                                     </div>
                                 </div>
                             </div>
                             <div className="w-full">
-                                <Button className='w-full h-full bg-[#DB4444] text-white font-semibold'>Mua ngay</Button>
+                                <Button htmlType='submit' className='w-full h-full bg-[#DB4444] text-white font-semibold'>Mua ngay</Button>
                             </div>
                         </div>
 
@@ -196,7 +248,7 @@ const Details = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
 
             {/* Description */}
             <div className="">
