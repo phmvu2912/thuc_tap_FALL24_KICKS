@@ -1,6 +1,6 @@
-import { Rate } from 'antd'
 
 // css
+import { Link } from 'react-router-dom'
 import styles from './card.module.scss'
 
 // định dạng dữ liệu cho props
@@ -9,11 +9,14 @@ type Props = {
 }
 
 const Card = ({ props }: Props) => {
+
+    console.log(props)
+
     return (
         <>
             <div className={`${styles['parent']}`}>
                 <div className={`${styles['img']}`}>
-                    <img src={props.thumbnail} alt={props.name} />
+                    <img src={props.thumbnail} alt={props.title} />
 
                     {/* Hover */}
                     <div className={`${styles['act']}`} onClick={() => alert('Thêm thành công')}>
@@ -23,7 +26,7 @@ const Card = ({ props }: Props) => {
 
                 <div className={`${styles['info']} space-y-2 py-2`}>
                     <div className={`${styles['title']}`}>
-                        <p>{props.name}</p>
+                        <Link to={`/product/details/${props._id}`}>{props.title}</Link>
                     </div>
 
                     <div className={`${styles['prices']} flex items-center space-x-3`}>
@@ -37,9 +40,9 @@ const Card = ({ props }: Props) => {
                     </div>
 
                     <div className={`${styles['rating']} flex items-center`}>
-                        <div className="">
+                        {/* <div className="">
                             <Rate disabled defaultValue={props.rating} />
-                        </div>
+                        </div> */}
 
                         {/* <span className='py-03'>
                             ({props.rating})

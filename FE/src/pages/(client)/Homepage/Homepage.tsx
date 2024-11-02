@@ -5,15 +5,28 @@ import styles from './homepage.module.scss'
 import Slider from "../../../components/(client)/Slider/Slider"
 import Card from "../../../components/(client)/Card/Card"
 import { serviceImg, serviceImg2, serviceImg3 } from "../../../constants/client"
+import { useQuery } from "@tanstack/react-query"
+import { getProducts } from "../../../services/product"
 
 const Homepage = () => {
 
-    const data = [
-        { id: 1, name: 'San pham 1', thumbnail: 'https://picsum.photos/200/300?random=1', price: 100, originPrice: 199, rating: 4.5 },
-        { id: 2, name: 'San pham 2', thumbnail: 'https://picsum.photos/200/300?random=2', price: 200, originPrice: 299, rating: 5 },
-        { id: 3, name: 'San pham 3', thumbnail: 'https://picsum.photos/200/300?random=3', price: 300, originPrice: 399, rating: 3 },
-        { id: 4, name: 'San pham 4', thumbnail: 'https://picsum.photos/200/300?random=4', price: 400, originPrice: 499, rating: 2 },
-    ]
+
+    const {data: products, isError, error, isFetching, isLoading} = useQuery({
+        queryKey: ['products'],
+        queryFn: () => getProducts()
+    })
+
+    console.log(products?.data?.data)
+
+    // const data = [
+    //     { id: 1, name: 'San pham 1', thumbnail: 'https://picsum.photos/200/300?random=1', price: 100, originPrice: 199, rating: 4.5 },
+    //     { id: 2, name: 'San pham 2', thumbnail: 'https://picsum.photos/200/300?random=2', price: 200, originPrice: 299, rating: 5 },
+    //     { id: 3, name: 'San pham 3', thumbnail: 'https://picsum.photos/200/300?random=3', price: 300, originPrice: 399, rating: 3 },
+    //     { id: 4, name: 'San pham 4', thumbnail: 'https://picsum.photos/200/300?random=4', price: 400, originPrice: 499, rating: 2 },
+    // ]
+
+    if(isLoading && isFetching) return <p>Loading...</p>
+    if(isError) return <p>Error: {error.message}</p>
 
     return (
         <>
@@ -34,9 +47,9 @@ const Homepage = () => {
                             </h2>
                         </div>
 
-                        <div className={`${styles['contentNewProducts']} flex justify-between items-start gap-4`}>
+                        <div className={`${styles['contentNewProducts']} grid grid-cols-4 gap-4 justify-between`}>
                             {
-                                data.map((item, index) => (
+                                products?.data?.data?.map((item: any, index: number) => (
                                     <Card props={item} key={index} />
                                 ))
                             }

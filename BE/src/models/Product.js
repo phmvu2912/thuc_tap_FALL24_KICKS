@@ -12,10 +12,10 @@ const productSchema = new Schema({
         ref: 'Category'
     },
     description: String,
+    sizes: [String],
     variants: [
         {
             color: String,
-            sizes: [String],
             stock: Number,
             price: Number,
             thumbnail: String,

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button, Modal, Table } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getProducts } from '../../../../services/products/getProducts';
+import { getProducts } from '../../../../services/product';
 import './list.scss'
 import Paragraph from 'antd/es/typography/Paragraph';
 const Products_List = () => {

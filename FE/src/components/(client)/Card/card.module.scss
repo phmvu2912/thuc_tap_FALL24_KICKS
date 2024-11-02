@@ -1,6 +1,15 @@
 .parent {
+    max-width: 300px;
+    min-width: 300px;
+
     .img {
         position: relative;
+        // width: 100%;    
+
+        img {
+            width: 100%;
+            height: 300px;
+        }
 
         .act {
             position: absolute;
@@ -17,6 +26,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             /* Thêm transition để hiệu ứng mượt hơn */
+            padding: 26px 0;
         }
 
         /* Khi di chuột vào .img thì .act sẽ xuất hiện */
@@ -29,6 +39,11 @@
         .title {
             font-weight: 500;
             font-size: 18px;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Hiển thị dấu ba chấm nếu nội dung vượt quá */
         }
 
         .prices {
