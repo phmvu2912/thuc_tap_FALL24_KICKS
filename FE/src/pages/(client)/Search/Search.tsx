@@ -1,8 +1,8 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { getProducts } from '../../../services/product';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Card from '../../../components/(client)/Card/Card';
+import { getProducts } from '../../../services/product';
 
 const Search = () => {
   const queryClient = useQueryClient();
@@ -38,6 +38,9 @@ const Search = () => {
   }, [searchQuery]);
 
   console.log(products)
+
+  if(isLoading && isFetching) return <p>Loading...</p>
+  if(isError) return <p>Error: {error.message}</p>
 
   return (
     <div className="container mx-auto">
