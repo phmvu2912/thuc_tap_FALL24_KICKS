@@ -16,14 +16,7 @@ const Homepage = () => {
         queryFn: () => getProducts()
     })
 
-    console.log(products?.data?.data)
-
-    // const data = [
-    //     { id: 1, name: 'San pham 1', thumbnail: 'https://picsum.photos/200/300?random=1', price: 100, originPrice: 199, rating: 4.5 },
-    //     { id: 2, name: 'San pham 2', thumbnail: 'https://picsum.photos/200/300?random=2', price: 200, originPrice: 299, rating: 5 },
-    //     { id: 3, name: 'San pham 3', thumbnail: 'https://picsum.photos/200/300?random=3', price: 300, originPrice: 399, rating: 3 },
-    //     { id: 4, name: 'San pham 4', thumbnail: 'https://picsum.photos/200/300?random=4', price: 400, originPrice: 499, rating: 2 },
-    // ]
+    // console.log(products?.data?.data)
 
     if(isLoading && isFetching) return <p>Loading...</p>
     if(isError) return <p>Error: {error.message}</p>

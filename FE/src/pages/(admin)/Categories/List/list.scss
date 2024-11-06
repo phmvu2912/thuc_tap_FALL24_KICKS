@@ -1,0 +1,9 @@
+.table-cell-ellipsis {
+    max-width: 200px;
+    white-space: nowrap;
+    /* Ngăn không cho xuống dòng */
+    overflow: hidden;
+    /* Ẩn nội dung vượt quá chiều rộng */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm */
+}

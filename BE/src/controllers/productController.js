@@ -1,5 +1,6 @@
 import Product from "../models/Product.js";
 import productValidation from "../validation/productValidation.js";
+import slugify from "slugify";
 
 // ! GET ALL
 const getProducts = async (req, res) => {
@@ -28,7 +29,7 @@ const getProducts = async (req, res) => {
             sortOptions[field] = order === 'desc' ? -1 : 1;
         }
 
-        console.log("Filter applied:", filter); 
+        console.log("Filter applied:", filter);
 
         // Thực hiện truy vấn sản phẩm dựa trên bộ lọc và sắp xếp
         const products = await Product.find(filter)
@@ -92,8 +93,18 @@ const getProductById = async (req, res) => {
 // ! CREATE ONE
 export const createProduct = async (req, res) => {
     try {
+        const output = await productValidation.validate({
+            ...req.body,
+            slug: slugify(req.body.title, {
+                replacement: '-',
+                lower: true,
+                strict: true,
+                locale: 'vi',
+                trim: true
+            })
+        });
 
-        const output = await productValidation.validate(req.body);
+        // return console.log("Sizes received on server:", req.body.sizes);
 
         const product = await Product.create(output);
 

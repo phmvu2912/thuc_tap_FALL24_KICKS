@@ -1,19 +1,27 @@
 import { BackwardOutlined, DeleteFilled, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Image, Input, message, Tooltip } from "antd";
-import Dragger from "antd/es/upload/Dragger";
+import { Button, Form, Image, Input, message, Select, Tooltip } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { createProduct, getProductById } from "../../../../../services/product";
+import { useEffect } from "react";
+import { createProduct, getProductById } from "../../../../services/product";
+import { getCategories } from "../../../../services/category";
 
 const Product_Form = () => {
 
     const [form] = Form.useForm();
     const { id } = useParams();
 
-    const { data, isError, error, isFetching, isLoading } = useQuery({
+    // call api product
+    const { data: product, isError, error, isFetching, isLoading } = useQuery({
         queryKey: ['product', id],
         queryFn: () => getProductById(id),
         enabled: !!id
+    });
+
+    // call api category
+    const { data: categories } = useQuery({
+        queryKey: ['categories'],
+        queryFn: () => getCategories()
     });
 
     const { mutate } = useMutation({
@@ -22,9 +30,10 @@ const Product_Form = () => {
                 if (id) {
                     console.log('update');
 
+                    console.log(dataForm)
 
                 } else {
-                    console.log('create');
+                    console.log('create form', dataForm);
 
                     const { data } = await createProduct(dataForm);
 
@@ -41,14 +50,28 @@ const Product_Form = () => {
         }
     })
 
-    // id ? console.log(data?.data?.data) : console.log('create page');
+    // id ? console.log(category?.data?.data) : console.log('create page');
 
+    const currentCategory = product?.data?.data?.category; // Đây là ID của category hiện tại
+    console.log('Current Category ID:', currentCategory); // Kiểm tra giá trị category hiện tại
+
+    // fill data category
+    useEffect(() => {
+        if (id && product?.data?.data) {
+            const { category, ...otherFields } = product.data.data;
+            // Thiết lập tất cả các trường của form
+            form.setFieldsValue({
+                category: category._id, // Thiết lập category bằng _id của category hiện tại
+                ...otherFields, // Cập nhật thêm các trường khác nếu cần
+            });
+        }
+    }, [product, form, id]);
 
     // call api
     const onFinish = (dataForm: any) => {
         mutate(id ? { ...dataForm, id } : {
-            ...dataForm, sizes: ['34', '45'], slug: "sp-4", category: "671265d7ba30a416f959fa82", variants: [
-                { color: 'red', stock: 10, price: 1000, thumbnail: 'https://via.placeholder.com/150' },
+            ...dataForm, sizes: dataForm.sizes.split(","), variants: [
+                { color: 'red', stock: 69, price: 69000, thumbnail: 'https://via.placeholder.com/150' },
             ]
         });
     }
@@ -82,7 +105,6 @@ const Product_Form = () => {
                     style={{ maxWidth: 600 }}
                     onFinish={onFinish}
                     layout="vertical"
-                    initialValues={data?.data?.data}
                 >
                     <Form.Item
                         label="Tên sản phẩm"
@@ -92,12 +114,43 @@ const Product_Form = () => {
                         <Input />
                     </Form.Item>
 
+                    {/* Category */}
+                    {/* <Form.Item
+                        label="Danh mục"
+                        name='category'
+                        rules={[{ required: true, message: 'Please select a category!' }]} // Cập nhật thông báo lỗi
+                    >
+                        <Select
+                            placeholder="Select an option"
+                            options={categories?.data?.data.map((item: any) => ({ label: item.name, value: item._id }))}
+                        />
+                    </Form.Item> */}
+
+                    <Form.Item
+                        label="Danh mục"
+                        name='category'
+                        rules={[{ required: true, message: 'Please select a category!' }]}
+                    >
+                        <Select placeholder="Select an option"
+                            defaultValue={currentCategory?._id} // Thiết lập giá trị mặc định
+                        >
+                            {
+                                categories?.data?.data.map((category: any) => (
+                                    <Select.Option key={category._id} value={category._id}>
+                                        {category.name} {/* Hiển thị tên danh mục */}
+                                    </Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+
+                    {/* Size */}
                     <Form.Item
                         label={
-                            <span>
-                                Size&nbsp;
+                            <span className="">
+                                Size
                                 <Tooltip
-                                    title="Khi thay đổi dữ liệu của Size cần thêm dấu , vào sau mỗi size"
+                                    title="Khi thay đổi dữ liệu của Size cần thêm dấu , vào sau mỗi size. VD: 39,40,41..."
                                     placement="right"
                                 >
                                     <QuestionCircleOutlined style={{ marginLeft: 4, cursor: 'pointer' }} />

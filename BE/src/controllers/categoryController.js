@@ -4,7 +4,7 @@ import Category from "../models/Category.js";
 const getCategories = async (req, res) => {
     try {
 
-        const categories = await Category.find().populate('products').exec();
+        const categories = await Category.find().exec();
 
         // * Kiểm tra xem có sản phẩm nào không
         if (!categories) {

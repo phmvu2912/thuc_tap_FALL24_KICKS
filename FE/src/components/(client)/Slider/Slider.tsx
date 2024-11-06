@@ -1,30 +1,22 @@
-import React from 'react'
 import { Carousel } from 'antd';
+import banner4 from '../../../../public/images/banner_5.jpg';
+import banner5 from '../../../../public/images/banner_6.jpg';
+import banner6 from '../../../../public/images/banner_7.jpg';
+
 
 const Slider = () => {
-
-    const contentStyle: React.CSSProperties = {
-        height: '160px',
-        color: '#fff',
-        lineHeight: '160px',
-        textAlign: 'center',
-        background: '#364d79',
-    };
 
     return (
         <>
             <Carousel autoplay>
-                <div>
-                    <h3 style={contentStyle}>1</h3>
+                <div className='w-full h-[520px] overflow-hidden bg-[#d9d9d9]'>
+                    <img src={banner4} className='object-cover w-full h-full'/>
                 </div>
-                <div>
-                    <h3 style={contentStyle}>2</h3>
+                <div className='w-full h-[520px] overflow-hidden bg-[#db4444]'>
+                    <img src={banner5} className='object-cover w-full h-full'/>
                 </div>
-                <div>
-                    <h3 style={contentStyle}>3</h3>
-                </div>
-                <div>
-                    <h3 style={contentStyle}>4</h3>
+                <div className='w-full h-[520px] overflow-hidden bg-[#db4444]'>
+                    <img src={banner6} className='object-cover w-full h-full'/>
                 </div>
             </Carousel>
         </>

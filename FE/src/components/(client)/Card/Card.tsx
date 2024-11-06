@@ -16,7 +16,7 @@ const Card = ({ props }: Props) => {
         <>
             <div className={`${styles['parent']}`}>
                 <div className={`${styles['img']}`}>
-                    <img src={props.thumbnail} alt={props.title} />
+                    <img src={props?.variants[0]?.thumbnail} alt={props.title} />
 
                     {/* Hover */}
                     <div className={`${styles['act']}`} onClick={() => alert('Thêm thành công')}>
@@ -31,12 +31,13 @@ const Card = ({ props }: Props) => {
 
                     <div className={`${styles['prices']} flex items-center space-x-3`}>
                         <div className={`${styles['sale']}`}>
-                            $ {props.price}
+                            $ {props?.variants[0]?.price}
                         </div>
 
-                        <div className={`${styles['origin']}`}>
+                        
+                        {/* <div className={`${styles['origin']}`}>
                             $ {props.originPrice}
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className={`${styles['rating']} flex items-center`}>

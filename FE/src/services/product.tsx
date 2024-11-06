@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import instacnce from "../configs/axios";
 
+// get all
 export const getProducts = async (params?: any): Promise<AxiosResponse<any>> => {
     try {
         const response = await instacnce.get(`/products`, { params });
@@ -22,6 +23,7 @@ export const getProducts = async (params?: any): Promise<AxiosResponse<any>> => 
     }
 }
 
+// get one
 export const getProductById = async (id: any) => {
     try {
 
@@ -39,6 +41,7 @@ export const getProductById = async (id: any) => {
     }
 }
 
+// create
 export const createProduct = async (dataForm: any): Promise<AxiosResponse<any>> => {
     try {
 
@@ -59,5 +62,23 @@ export const createProduct = async (dataForm: any): Promise<AxiosResponse<any>> 
             headers: {},
             config: {} as any,
         }
+    }
+}
+
+// remove
+export const removeProductById = async (id: any) => {
+    try {
+
+        const response = await instacnce.delete(`/products/${id}`);
+
+        // if (response.statusText !== 'OK') {
+        //     throw new Error('Error fetching products');
+        // }
+
+        return response;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
     }
 }

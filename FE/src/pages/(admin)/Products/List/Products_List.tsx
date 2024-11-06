@@ -1,33 +1,63 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
-import { Button, Modal, Table } from 'antd';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, message, Modal, Table } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getProducts } from '../../../../services/product';
+import { getProducts, removeProductById } from '../../../../services/product';
 import './list.scss';
+import { TProduct } from '../../../../interfaces/product';
 const Products_List = () => {
 
-    // const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
+
     const [ellipsis, setEllipsis] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
 
     const { data, isError, error, isLoading, isFetching } = useQuery({
         queryKey: ['products'],
         queryFn: () => getProducts()
+    });
+
+    const { mutate } = useMutation({
+        mutationFn: async (id) => {
+            try {
+                await removeProductById(id)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        onError: (error) => {
+            console.log(error)
+            message.error('Xóa thất bại');
+        }, 
+        onSuccess: () => {
+            message.success('Xóa thành công!');
+            
+            queryClient.invalidateQueries({
+                queryKey: ['products']
+            });
+        }
     })
 
     const products = data?.data?.data;
 
-    // const abc = products?.map((item: any) => (
-    //     item.variants.map((variant: any) => (
-    //         variant.stock
-    //     ))
-    // ))
-
-    // console.log(abc)
-
-    // console.log(products)
+    //! Delete
+    const handleRemove = (item: TProduct) => {
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: 'Bạn có chắc chắn muốn xóa bản ghi này?',
+            okText: 'Xóa',
+            cancelText: 'Hủy',
+            centered: true,
+            onOk() {
+                mutate(item._id);
+            },
+            onCancel() {
+                console.log('Đã hủy');
+            },
+        });
+    }
 
     const dataTable: any[] = products?.map((item: any, index: number) => (
         {
@@ -50,11 +80,6 @@ const Products_List = () => {
             className: 'table-cell-ellipsis'
         },
         {
-            title: 'Tên sản phẩm',
-            dataIndex: 'title',
-            key: 'title',
-        },
-        {
             title: 'Mô tả',
             dataIndex: 'description',
             key: 'description',
@@ -70,15 +95,22 @@ const Products_List = () => {
                     <Link
                         to={`/admin/product/update/${item._id}`}
                     >
-                        <Button className='btn bg-red-200 py-1 px-4 rounded-md hover:text-white hover:bg-slate-500 w-16'>
+                        <Button type='primary' className='btn py-1 px-4 rounded-md hover:text-white hover:bg-slate-500 w-16'>
                             Sửa
                         </Button>
                     </Link>
+
                     {/* delete */}
-                    <Button className='btn bg-red-200 py-1 px-4 rounded-md hover:text-white hover:bg-slate-500 w-16'>Xóa</Button>
+                    <Button
+                        className='btn bg-red-500 py-1 px-4 rounded-md text-white w-16'
+                        onClick={() => handleRemove(item)}
+                    >
+                        Xóa
+                    </Button>
+
                     {/* detail */}
                     <Button
-                        className='btn bg-red-200 py-1 px-4 rounded-md hover:text-white hover:bg-slate-500 w-16'
+                        className='btn bg-yellow-500 py-1 px-4 rounded-md text-whit w-16'
                         onClick={() => setModalOpen(true)}
                     >
                         Chi tiết

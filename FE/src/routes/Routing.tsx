@@ -8,7 +8,8 @@ import Dashboard from '../pages/(admin)/Dashboard/Dashboard'
 import Products_List_Admin from '../pages/(admin)/Products/List/Products_List'
 import Product_Details from '../pages/(client)/Products/Details'
 import Search from '../pages/(client)/Search/Search'
-import Product_Form from '../pages/(admin)/Products/List/Form/Product_Form'
+import Product_Form from '../pages/(admin)/Products/Form/Product_Form'
+import Categories_List from '../pages/(admin)/Categories/List/Categories_List'
 
 const Routing = () => {
     return (
@@ -17,12 +18,12 @@ const Routing = () => {
                 {/* Client */}
                 <Route path='/' element={<LayoutClient />}>
                     <Route index element={<Homepage />} />
-                    
+
                     {/* Route products */}
                     <Route path='/products' element={<List_Products />} />
                     <Route path='/product/details/:id' element={<Product_Details />} />
-                                       
-                    
+
+
                     <Route path='/' element={<p className='container mx-auto'>About</p>} />
                     <Route path='/' element={<p className='container mx-auto'>Contact</p>} />
 
@@ -33,12 +34,16 @@ const Routing = () => {
                 {/* Admin */}
                 <Route path='/admin' element={<LayoutAdmin />}>
                     <Route index element={<Dashboard />} />
-                    
+
                     {/* route products */}
                     <Route path='/admin/products' element={<Products_List_Admin />} />
                     <Route path='/admin/product/create' element={<Product_Form />} />
                     <Route path='/admin/product/update/:id' element={<Product_Form />} />
 
+                    {/* route categories */}
+                    <Route path='/admin/categories' element={<Categories_List />} />
+                    <Route path='/admin/category/create' element={<Product_Form />} />
+                    <Route path='/admin/category/update/:id' element={<Product_Form />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
