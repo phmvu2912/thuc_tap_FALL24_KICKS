@@ -2,9 +2,11 @@ import { RollbackOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } 
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // css
-import { Dropdown, MenuProps, Space } from "antd";
+import { Dropdown, MenuProps, Modal, Space } from "antd";
 import { useForm } from "react-hook-form";
 import styles from './headerClient.module.scss';
+import Login from "../../../pages/auth/Login";
+import { useState } from "react";
 
 const Header = () => {
 
@@ -17,6 +19,31 @@ const Header = () => {
         navigate(`/search?query=${data.query}`);
     }
 
+    // const [modalOpen, setModalOpen] = useState(false);
+
+    const handleLogin = () => {
+        Modal.confirm({
+            // title: (
+            //     <span className="text-center font-bold w-full flex justify-center items-center">Đăng nhập</span>
+            // ),
+            content: (
+                <Login />
+            ),
+            okText: "Xác nhận",
+            cancelText: "Hủy",
+            footer: null,
+            icon: null,
+            closable: true,
+            centered: true,
+            onOk() {
+                // Thực hiện thao tác xóa khi nhấn nút "Xác nhận"
+                console.log("Đã xóa sản phẩm");
+            },
+            onCancel() {
+                console.log("Đã hủy xóa sản phẩm");
+            },
+        });
+    }
 
     const user = {
         name: 'Phạm Đào Vũ',
@@ -44,6 +71,11 @@ const Header = () => {
             key: '4',
             label: <span className="text-white w-full hover:text-black flex items-center gap-2"><RollbackOutlined /> Đăng xuất</span>,
             className: 'bg-red-500 hover:bg-red-400',
+        },
+        {
+            key: '5',
+            label: <span className="text-white w-full hover:text-black flex items-center gap-2" onClick={() => handleLogin()}><RollbackOutlined /> Đăng nhập</span>,
+            className: 'bg-blue-500 hover:bg-blue-400',
         },
     ];
 
@@ -125,12 +157,12 @@ const Header = () => {
                         </div>
 
                         <div className="cart">
-                            <Link to={''}>
+                            <Link to={'/cart'}>
                                 <ShoppingCartOutlined />
                             </Link>
                         </div>
 
-                        <div className="wishlist">
+                        <div className="account">
                             <Dropdown menu={{ items }} placement="bottomRight" className="cursor-pointer">
                                 <a onClick={(e) => e.preventDefault()}>
                                     <Space>

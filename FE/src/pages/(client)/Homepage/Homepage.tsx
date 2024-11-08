@@ -22,9 +22,9 @@ const Homepage = () => {
     if(isError) return <p>Error: {error.message}</p>
 
     return (
-        <>
+        <div className="">
             {/* Carousel */}
-            <section>
+            <section className="">
                 <Slider />
             </section>
 
@@ -131,7 +131,7 @@ const Homepage = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     )
 }
 

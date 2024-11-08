@@ -20,7 +20,7 @@ const Products_List = () => {
     });
 
     const { mutate } = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async (id: string) => {
             try {
                 await removeProductById(id)
             } catch (error) {

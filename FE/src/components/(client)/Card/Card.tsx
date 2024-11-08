@@ -10,7 +10,7 @@ type Props = {
 
 const Card = ({ props }: Props) => {
 
-    console.log(props)
+    // console.log(props)
 
     return (
         <>

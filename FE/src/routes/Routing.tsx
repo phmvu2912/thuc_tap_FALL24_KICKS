@@ -10,6 +10,9 @@ import Product_Details from '../pages/(client)/Products/Details'
 import Search from '../pages/(client)/Search/Search'
 import Product_Form from '../pages/(admin)/Products/Form/Product_Form'
 import Categories_List from '../pages/(admin)/Categories/List/Categories_List'
+import Cart from '../pages/(client)/Cart/Cart'
+import Login from '../pages/auth/Login'
+import Register from '../pages/auth/Register'
 
 const Routing = () => {
     return (
@@ -29,6 +32,10 @@ const Routing = () => {
 
                     {/* Search */}
                     <Route path='/search' element={<Search />} />
+
+                    {/* Cart */}
+                    <Route path='/cart' element={<Cart />} />
+
                 </Route>
 
                 {/* Admin */}
@@ -45,6 +52,10 @@ const Routing = () => {
                     <Route path='/admin/category/create' element={<Product_Form />} />
                     <Route path='/admin/category/update/:id' element={<Product_Form />} />
                 </Route>
+
+                {/* Route Auth */}
+                {/* <Route path="/login" element={<Login />} /> */}
+                <Route path="/register" element={<Register />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>
