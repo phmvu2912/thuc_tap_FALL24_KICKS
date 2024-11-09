@@ -12,7 +12,7 @@ const getProducts = async (req, res) => {
 
         // Thêm điều kiện tìm kiếm theo tiêu đề nếu có query
         if (query) {
-            filter.title = { $regex: query, $options: 'i' };
+            filter.title = { $regex: query, $options: 'i' }; // Tìm kiếm gần giống (case-insensitive)
         }
 
         // Thêm điều kiện lọc theo giá nếu có
@@ -23,16 +23,20 @@ const getProducts = async (req, res) => {
         }
 
         // Tạo điều kiện sắp xếp nếu có
-        const sortOptions = {};
+        let sortOptions = {};
         if (sort) {
-            const [field, order] = sort.split(':');
-            sortOptions[field] = order === 'desc' ? -1 : 1;
+            // Giả sử sort là kiểu 'price' hoặc 'name'
+            if (sort === 'price') {
+                sortOptions.price = 1; // 1 cho sắp xếp tăng dần, -1 cho sắp xếp giảm dần
+            } else if (sort === 'name') {
+                sortOptions.title = 1; // Sắp xếp theo tên (title)
+            }
         }
 
         console.log("Filter applied:", filter);
 
         // Thực hiện truy vấn sản phẩm dựa trên bộ lọc và sắp xếp
-        const products = await Product.find(filter)
+        const products = await Product.find(filter).sort(sortOptions)
             .sort(sortOptions)
             .populate('category')
             .exec();
@@ -117,6 +121,47 @@ export const createProduct = async (req, res) => {
         return res.status(201).json({
             status: true,
             data: product
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Có lỗi xảy ra khi lấy sản phẩm!'
+        });
+    }
+}
+
+// ! UPDATE ONE
+export const updateProduct = async (req, res) => {
+    try {
+        const output = await productValidation.validate({
+            ...req.body,
+            slug: slugify(req.body.title, {
+                replacement: '-',
+                lower: true,
+                strict: true,
+                locale: 'vi',
+                trim: true
+            })
+        });
+
+        // return console.log("Sizes received on server:", req.body.sizes);
+
+        const product = await Product.findByIdAndUpdate(req.params.id, output);
+
+        if (!product) {
+            return res.status(404).json({ message: "Sản phẩm không tìm thấy" });
+        }
+
+        if (!req.body) return res.status(400).json({
+            status: false,
+            error: 'Đã xảy ra sự cố khi gửi dữ liệu lên!',
+            message: 'Tạo mới sản phẩm thành công!'
+        })
+
+        return res.status(200).json({
+            status: true,
+            data: product,
+            message: 'Cập nhật sản phẩm thành công!'
         })
     } catch (error) {
         console.log(error);

@@ -77,4 +77,6 @@ const createCategory = async (req, res) => {
 }
 
 
+
+
 export { getCategories, createCategory };

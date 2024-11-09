@@ -65,6 +65,30 @@ export const createProduct = async (dataForm: any): Promise<AxiosResponse<any>> 
     }
 }
 
+// create
+export const updateProduct = async (dataForm: any): Promise<AxiosResponse<any>> => {
+    try {
+        
+        const response = await instacnce.put(`/products/${dataForm.id}`, dataForm);
+
+        if (response.statusText !== 'OK') {
+            throw new Error('Error fetching products');
+        }
+
+        return response;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            data: null,
+            status: 500,
+            statusText: 'Internal Server Error',
+            headers: {},
+            config: {} as any,
+        }
+    }
+}
+
 // remove
 export const removeProductById = async (id: any) => {
     try {

@@ -94,7 +94,7 @@ const Details = () => {
 
 
     return (
-        <div className='container mx-auto space-y-16'>
+        <div className='container mx-auto my-20 space-y-16'>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex items-start space-x-6 h-full">

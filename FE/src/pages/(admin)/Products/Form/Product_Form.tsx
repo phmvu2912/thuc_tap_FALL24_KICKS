@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Image, Input, message, Select, Tooltip } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { createProduct, getProductById } from "../../../../services/product";
+import { createProduct, getProductById, updateProduct } from "../../../../services/product";
 import { getCategories } from "../../../../services/category";
 
 const Product_Form = () => {
@@ -28,12 +28,16 @@ const Product_Form = () => {
         mutationFn: async (dataForm) => {
             try {
                 if (id) {
-                    console.log('update');
+                    // console.log('update');
 
-                    console.log(dataForm)
+                    // console.log(dataForm);
+
+                    const { data } = await updateProduct(dataForm);
+
+                    console.log(data);
 
                 } else {
-                    console.log('create form', dataForm);
+                    // console.log('create form', dataForm);
 
                     const { data } = await createProduct(dataForm);
 
@@ -46,12 +50,14 @@ const Product_Form = () => {
         onError: () => message.error('Có lỗi xảy ra, vui lòng thử lại sau'),
         onSuccess: () => {
             message.success('Thành công');
-            form.resetFields();
+
+            !id && form.resetFields();
+            
         }
     })
 
     const currentCategory = product?.data?.data?.category; // Đây là ID của category hiện tại
-    console.log('Current Category ID:', currentCategory); // Kiểm tra giá trị category hiện tại
+    // console.log('Current Category ID:', currentCategory); // Kiểm tra giá trị category hiện tại
 
     // fill data category
     useEffect(() => {
@@ -67,10 +73,15 @@ const Product_Form = () => {
 
     // call api
     const onFinish = (dataForm: any) => {
-        mutate(id ? { ...dataForm, id } : {
-            ...dataForm, sizes: dataForm.sizes.split(","), variants: [
-                { color: 'red', stock: 69, price: 69000, thumbnail: 'https://via.placeholder.com/150' },
-            ]
+
+        const sizes = Array.isArray(dataForm.sizes) 
+        ? dataForm.sizes.join(",")  // Nếu sizes là mảng, chuyển thành chuỗi
+        : dataForm.sizes; 
+
+        const sizeArray = sizes.split(",").map((size: any) => size.trim());
+
+        mutate(id ? { ...dataForm, sizes: sizeArray, id } : {
+            ...dataForm, sizes: sizeArray
         });
     }
 

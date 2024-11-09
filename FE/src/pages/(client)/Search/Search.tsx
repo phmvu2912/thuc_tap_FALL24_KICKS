@@ -18,7 +18,7 @@ const Search = () => {
   const queryParams = useQueryParams();
   const searchQuery = queryParams.get('query') || '';
 
-  const { data, isLoading, isError, error, isFetching, isPending } = useQuery({
+  const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ['products', searchQuery, sort],
     queryFn: () => getProducts({ query: searchQuery }),
     enabled: true
@@ -43,7 +43,7 @@ const Search = () => {
   if(isError) return <p>Error: {error.message}</p>
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto my-20">
       <div className="heading flex items-center justify-between">
         <div>
           <h5 className="font-semibold text-2xl">
