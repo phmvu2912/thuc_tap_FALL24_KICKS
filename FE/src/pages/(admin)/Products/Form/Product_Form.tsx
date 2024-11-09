@@ -50,8 +50,6 @@ const Product_Form = () => {
         }
     })
 
-    // id ? console.log(category?.data?.data) : console.log('create page');
-
     const currentCategory = product?.data?.data?.category; // Đây là ID của category hiện tại
     console.log('Current Category ID:', currentCategory); // Kiểm tra giá trị category hiện tại
 
@@ -75,13 +73,6 @@ const Product_Form = () => {
             ]
         });
     }
-
-    // const normFile = (e: any) => {
-    //     if (Array.isArray(e)) {
-    //         return e;
-    //     }
-    //     return e?.fileList;
-    // };
 
     if (isLoading && isFetching) return <p>Loading...</p>
     if (isError) return <p>Error: {error.message}</p>

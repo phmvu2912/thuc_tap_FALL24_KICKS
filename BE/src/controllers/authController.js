@@ -26,7 +26,7 @@ export const login = async (req, res) => {
         if (!req.body) return res.status(400).json({
             status: false,
             error: 'Đã xảy ra sự cố khi gửi dữ liệu lên!',
-            message: 'Đăng nhập thành công!'
+            message: 'Đăng nhập thất bại!'
         })
 
         // Tạo token
