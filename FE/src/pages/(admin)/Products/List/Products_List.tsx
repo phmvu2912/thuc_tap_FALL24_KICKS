@@ -126,7 +126,7 @@ const Products_List = () => {
                         <div className='space-y-4'>
                             {/* Tên sp */}
                             <p><span className='font-semibold'>Tên sản phẩm:</span> {item.title}</p>
-                            <p><span className='font-semibold'>Danh mục:</span> {item.category.name}</p>
+                            <p><span className='font-semibold'>Danh mục:</span> {item?.category?.name}</p>
                             {/* Mô tả */}
                             <div className="">
                                 <span className='font-semibold'>Mô tả:</span>

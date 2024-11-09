@@ -39,25 +39,64 @@ export const getCategoryById = async (id: any) => {
     }
 }
 
-// export const createProduct = async (dataForm: any): Promise<AxiosResponse<any>> => {
-//     try {
+// create
+export const createCategory = async (dataForm: any): Promise<AxiosResponse<any>> => {
+    try {
 
-//         const response = await instacnce.post(`/products`, dataForm);
+        const response = await instacnce.post(`/categories`, dataForm);
 
-//         if (response.statusText !== 'OK') {
-//             throw new Error('Error fetching products');
-//         }
+        if (response.statusText !== 'OK') {
+            throw new Error('Có lỗi khi thêm mới danh mục');
+        }
 
-//         return response;
+        return response;
 
-//     } catch (error) {
-//         console.error('Error:', error);
-//         return {
-//             data: null,
-//             status: 500,
-//             statusText: 'Internal Server Error',
-//             headers: {},
-//             config: {} as any,
-//         }
-//     }
-// }
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            data: null,
+            status: 500,
+            statusText: 'Internal Server Error',
+            headers: {},
+            config: {} as any,
+        }
+    }
+}
+
+// create
+export const updateCategory = async (dataForm: any): Promise<AxiosResponse<any>> => {
+    try {
+        
+        const response = await instacnce.put(`/categories/${dataForm.id}`, dataForm);
+
+        if (response.statusText !== 'OK') {
+            throw new Error('Có lỗi khi cập nhật danh mục');
+        }
+
+        return response;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            data: null,
+            status: 500,
+            statusText: 'Internal Server Error',
+            headers: {},
+            config: {} as any,
+        }
+    }
+}
+
+// remove
+export const removeCategoryById = async (id: any) => {
+    try {
+
+        const response = await instacnce.delete(`/categories/${id}`);
+
+        return response;
+
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}

@@ -15,7 +15,7 @@ const Product_Form = () => {
     const { data: product, isError, error, isFetching, isLoading } = useQuery({
         queryKey: ['product', id],
         queryFn: () => getProductById(id),
-        enabled: !!id
+        enabled: !!id // chỉ call api khi có id trên url
     });
 
     // call api category
@@ -65,7 +65,7 @@ const Product_Form = () => {
             const { category, ...otherFields } = product.data.data;
             // Thiết lập tất cả các trường của form
             form.setFieldsValue({
-                category: category._id, // Thiết lập category bằng _id của category hiện tại
+                category: category?._id, // Thiết lập category bằng _id của category hiện tại
                 ...otherFields, // Cập nhật thêm các trường khác nếu cần
             });
         }
@@ -138,8 +138,8 @@ const Product_Form = () => {
                         >
                             {
                                 categories?.data?.data.map((category: any) => (
-                                    <Select.Option key={category._id} value={category._id}>
-                                        {category.name} {/* Hiển thị tên danh mục */}
+                                    <Select.Option key={category?._id} value={category?._id}>
+                                        {category?.name} {/* Hiển thị tên danh mục */}
                                     </Select.Option>
                                 ))
                             }

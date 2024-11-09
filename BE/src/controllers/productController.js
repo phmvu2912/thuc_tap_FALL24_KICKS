@@ -3,7 +3,7 @@ import productValidation from "../validation/productValidation.js";
 import slugify from "slugify";
 
 // ! GET ALL
-const getProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
     try {
         const { query, minPrice, maxPrice, sort } = req.query;
 
@@ -65,9 +65,8 @@ const getProducts = async (req, res) => {
     }
 };
 
-
 // ! GET ONE
-const getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
     const { id } = req.params;  // Lấy ID từ params
 
     try {
@@ -193,5 +192,3 @@ export const removeProduct = async (req, res) => {
         });
     }
 }
-
-export { getProducts, getProductById };

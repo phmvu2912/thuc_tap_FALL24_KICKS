@@ -13,6 +13,7 @@ import Categories_List from '../pages/(admin)/Categories/List/Categories_List'
 import Cart from '../pages/(client)/Cart/Cart'
 import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
+import Category_Form from '../pages/(admin)/Categories/Form/Category_Form'
 
 const Routing = () => {
     return (
@@ -49,8 +50,8 @@ const Routing = () => {
 
                     {/* route categories */}
                     <Route path='/admin/categories' element={<Categories_List />} />
-                    <Route path='/admin/category/create' element={<Product_Form />} />
-                    <Route path='/admin/category/update/:id' element={<Product_Form />} />
+                    <Route path='/admin/category/create' element={<Category_Form />} />
+                    <Route path='/admin/category/update/:id' element={<Category_Form />} />
                 </Route>
 
                 {/* Route Auth */}
