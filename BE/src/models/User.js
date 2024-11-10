@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const authSchema = new Schema({
+const userSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -14,7 +14,12 @@ const authSchema = new Schema({
     password: {
         type: String,
         required: true,
+    },
+    role: {
+        type: String,
+        enum: ["admin", "user", "staff"],
+        default: "user",
     }
 })
 
-export default mongoose.model("Auth", authSchema);
+export default mongoose.model("User", userSchema);

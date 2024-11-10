@@ -3,7 +3,7 @@ import instacnce from "../configs/axios"
 export const register = async (dataForm: any) => {
     try {
 
-        const res = await instacnce.post('auth/register', dataForm);
+        const res = await instacnce.post('register', dataForm);
 
         return res;
 
@@ -16,7 +16,7 @@ export const register = async (dataForm: any) => {
 export const login = async (dataForm: any) => {
     try {
 
-        const res = await instacnce.post('auth/login', dataForm);
+        const res = await instacnce.post('login', dataForm);
 
         return res;
 

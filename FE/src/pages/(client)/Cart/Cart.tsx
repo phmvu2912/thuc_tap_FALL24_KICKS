@@ -1,28 +1,31 @@
 import { DeleteFilled } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Image, Table } from "antd";
+import { getCartById } from "../../../services/cart";
+import { render } from "sass";
 
 const Cart = () => {
 
-    const dataSource = [
+    // Lấy id user ở session
+    const userSession = sessionStorage.getItem('userInfo');
+
+    const user = userSession ? JSON.parse(userSession) : null;
+
+    // console.log(user?.user?._id);
+
+    const { data, isError, error, isFetching, isLoading } = useQuery({
+        queryKey: ['carts'],
+        queryFn: () => getCartById(user?.user?._id)
+    })
+
+    // console.log(data?.data?.cart)
+
+    const dataSource = data?.data?.cart?.items.map((item: any, index: number) => (
         {
-            key: '1',
-            title: 'San pham 1',
-            thumbnail: 'https://picsum.photos/id/237/300/200',
-            quantity: 1,
-            size: '49',
-            color: '#fff',
-            price: 8000
-        },
-        {
-            key: '2',
-            title: 'San pham 2',
-            thumbnail: 'https://picsum.photos/id/238/300/200',
-            quantity: 2,
-            size: '49',
-            color: '#fff',
-            price: 5000
-        },
-    ];
+            key: index + 1,
+            ...item
+        }
+    ));
 
     const columns = [
         {
@@ -50,13 +53,13 @@ const Cart = () => {
         },
         {
             title: 'Số lượng',
-            dataIndex: 'quantity',
-            key: 'quantity',
-            // render: (_: any, item: any) => (
-            //     <div>
-            //         <InputNumber value={item.quantity}/>
-            //     </div>
-            // ),
+            // dataIndex: 'quantity',
+            // key: 'quantity',
+            render: (_: any, item: any) => (
+                <form className="">
+                    <input type="number" defaultValue={item.quantity}/>
+                </form>
+            ),
             align: 'center' as const
         },
         {
@@ -104,26 +107,31 @@ const Cart = () => {
             <div className="container mx-auto my-20">
                 <div className="">
                     <div className="heading">
-                        <h3 className="text-2xl font-bold text-[#db4444]">Giỏ hàng [{dataSource.length}]</h3>
+                        <h3 className="text-2xl font-bold text-[#db4444]">Giỏ hàng [{dataSource?.length}]</h3>
                     </div>
 
-                    <div className="content py-6 ">
-                        <Table columns={columns} dataSource={dataSource} className="w-full" pagination={false} />
-                    </div>
-                </div>
-            </div>
+                    <div className="content py-6 flex gap-6">
+                        <div className="w-[70%]">
+                            <Table columns={columns} dataSource={dataSource} className="w-full" pagination={false} />
+                        </div>
 
-            <div className="fixed bottom-0  w-full ">
-                <div className="flex w-full h-full">
-                    <div className="bg-[#d3d3d3] w-[80%] py-8 px-4">
-                        abc
-                    </div>
-                    <div className="bg-[#db4444] w-[20%] h-full my-auto py-8 px-4">
-                        <p className="font-semibold">Tổng tiền:  
-                            {
-                                dataSource?.map(item => item.price * item.quantity).reduce((a, b) => a + b, 0)
-                            }
-                        </p>
+                        <div className="border rounded-md w-[30%] p-3 h-[300px] flex flex-col justify-between">
+                            <div className="">
+                                <div className="font-semibold">
+                                    Thanh toán: {dataSource?.length} sản phẩm
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="">
+                                    <p className="text-lg font-semibold">Tổng tiền: <span className="text-[#db4444]">{data?.data?.cart?.totalPrice} $</span></p>
+                                </div>
+
+                                <div className="checkout w-full bg-[#db4444] text-center p-2 rounded-md text-white">
+                                    Mua ngay
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

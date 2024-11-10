@@ -1,18 +1,20 @@
 import { CarOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Carousel, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
-import { TProduct, TVariants } from '../../../interfaces/product'
+import { TCart } from '../../../interfaces/cart'
+import { TVariants } from '../../../interfaces/product'
 import { getProductById } from '../../../services/product'
 import styles from './scss/details.module.scss'
+import { addItemToCart } from '../../../services/cart'
 
 const Details = () => {
 
     const { id } = useParams();
 
-    const { register, handleSubmit, reset, setValue } = useForm<TProduct>();
+    const { register, handleSubmit, reset, setValue } = useForm<TCart>();
 
     const [activeItem, setActiveItem] = useState();
 
@@ -25,10 +27,18 @@ const Details = () => {
     const { data, isError, error, isFetching, isLoading } = useQuery({
         queryKey: ['product'],
         queryFn: () => getProductById(id)
+    });
+
+    const { mutate } = useMutation({
+        mutationFn: (dataForm) => addItemToCart(dataForm)
     })
 
     const product = data?.data?.data;
     const variants = product?.variants;
+
+    // Lấy id user ở session
+    const userSession = sessionStorage.getItem('userInfo');
+    const user = userSession ? JSON.parse(userSession) : null;
 
     // Mặc định khi render lại thì mặc định set biến thể đầu tiên trong mảng để hiển thị
     useEffect(() => {
@@ -62,7 +72,7 @@ const Details = () => {
     };
 
     const plusBtn = () => {
-        if (quantity >= productPresent?.stock) {
+        if (!productPresent || quantity >= productPresent.stock) {
             return message.error('Số lượng bạn muốn không được phép vượt quá số lượng hàng trong kho!');
         }
         const newQuantity = quantity + 1;
@@ -70,16 +80,18 @@ const Details = () => {
         setValue('quantity', newQuantity);  // Cập nhật vào React Hook Form
     };
 
-    console.log(quantity)
+    // console.log(quantity)
 
-    const onSubmit = (data: TProduct) => {
+    const onSubmit = (data: any) => {
 
         if (!data.size) {
             return message.error('Vui lòng chọn một kích thước!');
         }
 
-        console.log({
+        mutate({
             ...data,
+            userId: user?.user?._id,
+            productId: id,
             title: product?.title,
             color: productPresent?.color,
             thumbnail: productPresent?.thumbnail,
@@ -90,7 +102,7 @@ const Details = () => {
     if (isLoading && isFetching) return <p>Loading...</p>
     if (isError) return <p>Error: {error.message}</p>
 
-    console.log("isLoading:", isLoading, "isFetching:", isFetching);
+    // console.log("isLoading:", isLoading, "isFetching:", isFetching);
 
 
     return (
@@ -101,7 +113,7 @@ const Details = () => {
 
                 {/* Ảnh */}
                 <div className="left flex w-[60%] space-x-4 h-full">
-                    <div className={`${styles['subImgs']} flex flex-col space-y-4`}>
+                    <div className={`${styles['subImgs']} flex flex-col space-y-4 cursor-pointer`}>
                         {
                             product?.variants?.map((variant: any, index: number) => (
                                 <div className={`${styles['img']} flex-1`} key={index} onClick={() => handleChangeImg(variant.thumbnail)}>
@@ -119,8 +131,6 @@ const Details = () => {
                                 <img src={imgPresent} alt="product" className='h-full' />
                             )
                         }
-
-
                     </div>
                 </div>
 
@@ -134,7 +144,7 @@ const Details = () => {
                     <div className="rating flex items-center space-x-2">
                         {/* <Rate disabled defaultValue={4} /> */}
                         <span className='font-semibold'>Danh mục: </span>
-                        <Link to={'/'} className='underline text-[#DB4444] font-medium'>{product.category.name}</Link>
+                        <Link to={'/'} className='underline text-[#DB4444] font-medium'>{product?.category?.name ? product?.category?.name : 'Chưa phân loại'}</Link>
                     </div>
 
                     {/* Stock */}
@@ -174,7 +184,7 @@ const Details = () => {
                     <div className="sizes flex items-stretch space-x-4">
                         <h5 className="text-lg font-semibold pt-2">Size: </h5>
                         <div className="grid grid-cols-7 gap-2">
-                            {product?.sizes.map((size, index) => (
+                            {product?.sizes.map((size: any, index: number) => (
                                 <div
                                     key={index}
                                     className={`size w-8 h-8 rounded-md border font-semibold flex justify-center items-center p-6 cursor-pointer 
@@ -213,13 +223,33 @@ const Details = () => {
                                 </div>
                             </div>
                             <div className="w-full">
-                                <Button htmlType='submit' className='w-full h-full bg-[#DB4444] text-white font-semibold'>Mua ngay</Button>
+                                <Button
+                                    htmlType='submit'
+                                    className={
+                                        `
+                                        w-full 
+                                        h-full 
+                                        bg-[#DB4444] 
+                                        text-white 
+                                        font-semibold
+                                        ${!productPresent || quantity >= productPresent.stock ? (
+                                            'cursor-not-allowed'
+                                        ) : (
+                                            ''
+                                        )
+                                        }
+                                        `}
+                                    disabled={!productPresent || quantity >= productPresent.stock}
+                                >
+                                    Mua ngay
+                                </Button>
                             </div>
                         </div>
 
                         <div className="">
-                            <div
-                                className="
+                            <Button
+                                htmlType='submit'
+                                className={`
                                     color
                                     w-8 
                                     h-8 
@@ -231,12 +261,20 @@ const Details = () => {
                                     p-6 
                                     cursor-pointer
                                     
-                                    hover:bg-[#DB4444]
-                                    hover:text-white
-                                "
+                                    
+                                    
+                                    ${!productPresent || quantity >= productPresent.stock ? (
+                                        'cursor-not-allowed'
+                                    ) : (
+                                        'hover:bg-[#DB4444] hover:text-white'
+
+                                    )
+                                    }
+                                `}
+                                disabled={!productPresent || quantity >= productPresent.stock}
                             >
                                 <ShoppingCartOutlined />
-                            </div>
+                            </Button>
                         </div>
                     </div>
 

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, Input, message } from 'antd';
 import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { register } from '../../services/auth';
+import { register } from '../../services/user';
 
 const Login = () => {
   const [form] = Form.useForm();

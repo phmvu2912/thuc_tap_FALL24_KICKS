@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, Input, message } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../services/auth';
 import { AxiosError } from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../../services/user';
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -27,10 +27,10 @@ const Login = () => {
 
                 // console.log(response?.data?.data)
                 // save token
-                localStorage.setItem('userInfo', JSON.stringify(response?.data?.data));
+                sessionStorage.setItem('userInfo', JSON.stringify(response?.data?.data));
 
                 // redirect
-                const isLogin = localStorage.getItem('userInfo')
+                const isLogin = sessionStorage.getItem('userInfo')
                 
                 // console.log(isLogin)
 
@@ -54,9 +54,9 @@ const Login = () => {
 
                 // Xử lý các lỗi cụ thể từ server
                 if (status === 400) {
-                    message.error('Đăng nhập thất bại: !');
+                    message.error('Đăng nhập thất bại: Email hoặc mật khẩu không chính xác!');
                 } else if (status === 500) {
-                    message.error('Đăng nhập thất bại: Lỗi server!');
+                    message.error('Đăng nhập thất bại: Lỗi server vui lòng thử lại sau!');
                 } else {
                     message.error('Đăng nhập thất bại!');
                 }

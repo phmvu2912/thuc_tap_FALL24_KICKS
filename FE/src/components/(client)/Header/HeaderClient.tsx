@@ -2,11 +2,9 @@ import { RollbackOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } 
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // css
-import { Dropdown, MenuProps, Modal, Space } from "antd";
+import { Dropdown, MenuProps, message, Modal, Space } from "antd";
 import { useForm } from "react-hook-form";
 import styles from './headerClient.module.scss';
-import Login from "../../../pages/auth/Login";
-import { useState } from "react";
 
 const Header = () => {
 
@@ -19,63 +17,74 @@ const Header = () => {
         navigate(`/search?query=${data.query}`);
     }
 
-    // const [modalOpen, setModalOpen] = useState(false);
+    const userStringfy = sessionStorage.getItem('userInfo');
 
-    const handleLogin = () => {
+    const userJSON = userStringfy ? JSON.parse(userStringfy) : null;
+
+    console.log(userJSON);
+
+    // Logout
+    const logout = () => {
+        if (!userJSON) return;
+
         Modal.confirm({
-            // title: (
-            //     <span className="text-center font-bold w-full flex justify-center items-center">Đăng nhập</span>
-            // ),
-            content: (
-                <Login />
-            ),
-            okText: "Xác nhận",
-            cancelText: "Hủy",
-            footer: null,
-            icon: null,
-            closable: true,
+            title: 'Đăng xuất',
+            content: 'Bạn có chắc chắn muốn đăng xuất tài khoản khỏi thiết bị này?',
+            okText: 'Đăng xuất',
+            cancelText: 'Hủy',
             centered: true,
             onOk() {
-                // Thực hiện thao tác xóa khi nhấn nút "Xác nhận"
-                console.log("Đã xóa sản phẩm");
+                sessionStorage.clear();
+
+                navigate('/');
+
+                message.success('Đăng xuất thành công!')
             },
             onCancel() {
-                console.log("Đã hủy xóa sản phẩm");
+                console.log('Đã hủy');
             },
         });
-    }
-
-    const user = {
-        name: 'Phạm Đào Vũ',
-        email: 'phmvu2912@gmail.com'
     }
 
     const items: MenuProps['items'] = [
         {
             key: '1',
             label:
-                <div>
-                    <p className="font-semibold">{user.name}</p>
-                    <p className="text-gray-400">{user.email}</p>
-                </div>,
+                userJSON ? (
+                    <div className="w-[200px]">
+                        <p className="font-semibold">{userJSON?.user?.username}</p>
+                        <p className="text-gray-400">{userJSON?.user?.email}</p>
+                    </div>
+                ) : (
+                    <div className="w-[200px] text-center">
+                        Bạn chưa đăng nhập
+                    </div>
+                )
+            ,
         },
         {
             type: 'divider',
         },
         {
             key: '2',
-            label: <Link to={'/profile'}>Hồ sơ</Link>,
-            icon: <UserOutlined />,
+            label: userJSON && <Link to={'/profile'} className="flex items-center gap-2"> <UserOutlined />Hồ sơ</Link>,
         },
         {
             key: '4',
-            label: <span className="text-white w-full hover:text-black flex items-center gap-2"><RollbackOutlined /> Đăng xuất</span>,
-            className: 'bg-red-500 hover:bg-red-400',
-        },
-        {
-            key: '5',
-            label: <span className="text-white w-full hover:text-black flex items-center gap-2" onClick={() => handleLogin()}><RollbackOutlined /> Đăng nhập</span>,
-            className: 'bg-blue-500 hover:bg-blue-400',
+            label:
+                userJSON ? (
+                    <div 
+                        className="text-white w-full hover:text-black flex items-center gap-2"
+                        onClick={() => logout()}
+                    >
+                        <RollbackOutlined /> Đăng xuất
+                    </div>
+                ) : (
+                    <Link to={'/login'} className="text-white w-full hover:text-black flex items-center gap-2">
+                        <RollbackOutlined /> Đăng nhập
+                    </Link>
+                ),
+            className: `${ userJSON ? 'bg-red-500 hover:bg-red-400' : 'bg-blue-500 hover:bg-blue-400' } `,
         },
     ];
 
@@ -157,7 +166,7 @@ const Header = () => {
                         </div>
 
                         <div className="cart">
-                            <Link to={'/cart'}>
+                            <Link to={userJSON ? '/cart' : '/login'}>
                                 <ShoppingCartOutlined />
                             </Link>
                         </div>

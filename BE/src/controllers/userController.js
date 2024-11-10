@@ -1,33 +1,24 @@
-import Auth from "../models/Auth.js";
-import authValidation from "../validation/authValidation.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import userValidation from "../validation/userValidation.js";
+import User from '../models/User.js';
 
 // ! LOGIN
 export const login = async (req, res) => {
     try {
-        const output = await authValidation.validate({
+        const output = await userValidation.validate({
             ...req.body
         });
 
         // Kiểm tra xem email có tồn tại không
-        const userExist = await Auth.findOne({ email: output.email });
+        const userExist = await User.findOne({ email: output.email });
 
         if (!userExist) return res.status(400).json({ status: false, message: 'Email không tồn tại!' });
 
-        // so sánh mật khẩu
+        // So sánh mật khẩu
         const isMatch = await bcrypt.compare(output.password, userExist.password);
 
         if (!isMatch) return res.status(400).json({ status: false, message: 'Mật khẩu không chính xác!' });
-
-
-        const user = await Auth.create(output);
-
-        if (!req.body) return res.status(400).json({
-            status: false,
-            error: 'Đã xảy ra sự cố khi gửi dữ liệu lên!',
-            message: 'Đăng nhập thất bại!'
-        })
 
         // Tạo token
         const token = jwt.sign(
@@ -40,30 +31,31 @@ export const login = async (req, res) => {
             status: true,
             data: { user: { email: userExist.email, _id: userExist._id, username: userExist.username }, token },
             message: 'Đăng nhập thành công!',
-        })
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             message: 'Có lỗi xảy ra khi đăng nhập!'
         });
     }
-}
+};
+
 
 export const register = async (req, res) => {
     try {
-        const output = await authValidation.validate({
+        const output = await userValidation.validate({
             ...req.body
         });
 
         // Kiểm tra xem email tồn tại chưa
-        const userExist = await Auth.findOne({ email: output.email });
+        const userExist = await User.findOne({ email: output.email });
 
         if (userExist) return res.status(400).json({ status: false, message: 'Email đã tồn tại!' });
 
         // Mã hóa mật khẩu
         const hashedPassword = await bcrypt.hash(output.password, 10);
 
-        const user = await Auth.create({
+        const user = await User.create({
             ...output,
             password: hashedPassword
         });
