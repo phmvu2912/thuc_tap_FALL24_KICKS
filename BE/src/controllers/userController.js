@@ -40,7 +40,6 @@ export const login = async (req, res) => {
     }
 };
 
-
 export const register = async (req, res) => {
     try {
         const output = await userValidation.validate({
@@ -77,3 +76,18 @@ export const register = async (req, res) => {
         });
     }
 }
+
+export const getUsers = async (req, res) => {
+    try {
+        
+        const users = await User.find();
+
+        res.status(200).json({
+            status: true,
+            data: users
+        })
+
+    } catch (error) {
+        
+    }
+}   

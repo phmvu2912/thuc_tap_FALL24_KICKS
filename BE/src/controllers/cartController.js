@@ -33,23 +33,13 @@ export const addItemToCart = async (req, res) => {
             quantity
         } = req.body;
 
-        // Kiểm tra và trả lỗi nếu thiếu size hoặc color
-        if (!size || !color) {
-            return res.status(400).json({ message: "Size and color are required fields" });
-        }
+        // Tính tổng giá cho mục này
+        const totalPrice = price * quantity;
 
-        // Chuyển đổi giá trị `price` và `quantity` thành số
-        const validPrice = parseFloat(price) || 0;
-        const validQuantity = parseInt(quantity, 10) || 0;
-        const totalPrice = validPrice * validQuantity;
-
-        if (!totalPrice) {
-            return res.status(400).json({ message: "Invalid price or quantity" });
-        }
-
-        // Kiểm tra xem giỏ hàng đã tồn tại chưa
+        // Tìm giỏ hàng của người dùng
         let cart = await Cart.findOne({ userId });
 
+        // Nếu giỏ hàng chưa tồn tại, tạo mới
         if (!cart) {
             cart = new Cart({
                 userId,
@@ -59,30 +49,34 @@ export const addItemToCart = async (req, res) => {
             });
         }
 
-        // Kiểm tra sản phẩm có tồn tại trong giỏ hàng không
+        // Kiểm tra xem sản phẩm có cùng `productId`, `size`, và `color` đã tồn tại trong giỏ chưa
         const existingItem = cart.items.find(
-            (item) => item.productId.toString() === productId
+            (item) => item.productId.toString() === productId && item.size === size && item.color === color
         );
 
         if (existingItem) {
-            existingItem.quantity += validQuantity;
+            // Nếu sản phẩm đã tồn tại, chỉ cập nhật số lượng và tổng giá
+            existingItem.quantity += quantity;
             existingItem.totalPrice += totalPrice;
         } else {
+            // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
             cart.items.push({
                 productId,
                 title,
                 thumbnail,
-                price: validPrice,
+                price,
                 size,
                 color,
-                quantity: validQuantity,
-                totalPrice: totalPrice
+                quantity,
+                totalPrice
             });
         }
 
+        // Cập nhật `totalQuantity` và `totalPrice` của giỏ hàng
         cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.quantity, 0);
         cart.totalPrice = cart.items.reduce((acc, item) => acc + item.totalPrice, 0);
 
+        // Lưu lại giỏ hàng
         await cart.save();
 
         return res.status(200).json({ message: "Item added to cart successfully", cart });
@@ -91,3 +85,4 @@ export const addItemToCart = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+

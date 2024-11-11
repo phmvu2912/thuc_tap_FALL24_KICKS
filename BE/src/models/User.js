@@ -15,6 +15,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    phoneNumber: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
     role: {
         type: String,
         enum: ["admin", "user", "staff"],

@@ -31,7 +31,7 @@ const Footer = () => {
                                 <h5 className="font-bold text-lg">Tài khoản</h5>
                             </div>
 
-                            <div className="item space-y-4">
+                            <div className="item flex flex-col space-y-4">
                                 <Link to={''}>Tài khoản của tôi</Link>
 
                                 <Link to={''}>Quên mật khẩu</Link>
@@ -45,7 +45,7 @@ const Footer = () => {
                                 <h5 className="font-bold text-lg">Điều khoản</h5>
                             </div>
 
-                            <div className="item space-y-4">
+                            <div className="item flex flex-col space-y-4">
                                 <Link to={''}>Điều khoản người dùng</Link>
 
                                 <Link to={''}>Chính sách hoàn trả</Link>
@@ -58,7 +58,7 @@ const Footer = () => {
                     </div>
 
                     <div className="text-center pt-6 mt-6 border-t border-t-[#141414]">
-                        <p className="text-[#141414]">&copy; Bản quyền thuộc về phmvu2912. Mọi quyền được bảo lưu.</p>
+                        <p className="text-gray-600 ">&copy; Bản quyền thuộc về vupdph34756</p>
                     </div>
                 </div>
             </footer>

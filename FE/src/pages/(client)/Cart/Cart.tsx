@@ -18,7 +18,7 @@ const Cart = () => {
         queryFn: () => getCartById(user?.user?._id)
     })
 
-    // console.log(data?.data?.cart)
+    console.log(data?.data?.cart)
 
     const dataSource = data?.data?.cart?.items.map((item: any, index: number) => (
         {
@@ -44,7 +44,8 @@ const Cart = () => {
             render: (_: any, item: any) => (
                 <div>
                     <Image
-                        width={100}
+                        width={120}
+                        height={120}
                         src={item.thumbnail}
                     />
                 </div>
@@ -57,10 +58,10 @@ const Cart = () => {
             // key: 'quantity',
             render: (_: any, item: any) => (
                 <form className="">
-                    <input type="number" defaultValue={item.quantity}/>
+                    <input type="number" defaultValue={item.quantity} className="w-[100px] text-center"/>
                 </form>
             ),
-            align: 'center' as const
+            align: 'center' as const,
         },
         {
             title: 'Phân loại',
@@ -70,9 +71,9 @@ const Cart = () => {
                 <div className="">
                     <p>Size: <span className="font-semibold">{item.size}</span></p>
                     <p>Màu sắc: <span className="font-semibold">{item.color}</span></p>
-
                 </div>
             ),
+            minWidth: 200
         },
         {
             title: 'Tổng tiền',
@@ -83,7 +84,8 @@ const Cart = () => {
                     <p>$ {item.price * item.quantity}</p>
                 </div>
             ),
-            align: 'center' as const
+            align: 'center' as const,
+            minWidth: 100
         },
         {
             title: 'Tools',
