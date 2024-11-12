@@ -1,10 +1,12 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Image, Table } from "antd";
+import { Button, Image, Input, Table } from "antd";
+import { useState } from "react";
 import { getCartById } from "../../../services/cart";
-import { render } from "sass";
 
 const Cart = () => {
+
+    const [showInput, setShowInput] = useState(false)
 
     // Lấy id user ở session
     const userSession = sessionStorage.getItem('userInfo');
@@ -54,11 +56,9 @@ const Cart = () => {
         },
         {
             title: 'Số lượng',
-            // dataIndex: 'quantity',
-            // key: 'quantity',
             render: (_: any, item: any) => (
                 <form className="">
-                    <input type="number" defaultValue={item.quantity} className="w-[100px] text-center"/>
+                    <input type="number" defaultValue={item.quantity} className="w-[100px] text-center" />
                 </form>
             ),
             align: 'center' as const,
@@ -77,8 +77,6 @@ const Cart = () => {
         },
         {
             title: 'Tổng tiền',
-            // dataIndex: 'quantity',
-            // key: 'quantity',
             render: (_: any, item: any) => (
                 <div>
                     <p>$ {item.price * item.quantity}</p>
@@ -103,6 +101,9 @@ const Cart = () => {
         },
     ];
 
+    if (isLoading && isFetching) return <p>Loading...</p>
+    if (isError) return <p>Error: {error.message}</p>
+
     return (
         <>
 
@@ -117,10 +118,63 @@ const Cart = () => {
                             <Table columns={columns} dataSource={dataSource} className="w-full" pagination={false} />
                         </div>
 
-                        <div className="border rounded-md w-[30%] p-3 h-[300px] flex flex-col justify-between">
+                        <div className="border rounded-md w-[30%] p-3 h-auto flex flex-col justify-between">
                             <div className="">
-                                <div className="font-semibold">
+                                <div className="font-semibold text-lg">
                                     Thanh toán: {dataSource?.length} sản phẩm
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h5 className="font-semibold">Thông tin đặt hàng:</h5>
+
+
+                                    {
+                                        showInput ? (
+                                            <div className="space-y-3">
+                                                <p>
+                                                    <Input placeholder="Nhập tên người nhận" />
+                                                </p>
+
+                                                <p>
+                                                    <Input placeholder="Nhập số điện thoại" />
+                                                </p>
+
+                                                <p>
+                                                    <Input placeholder="Nhập địa chỉ nhận hàng" />
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-3">
+
+                                                <p className="font-semibold">Tên người nhận: <span className="font-normal">Phạm Đào Vũ</span></p>
+
+                                                <p className="font-semibold">Số điện thoại: <span className="font-normal">0987654321</span></p>
+
+                                                <p className="font-semibold">Địa chỉ: <span className="font-normal">Hà Nội - Việt Nam</span></p>
+
+                                            </div>
+                                        )
+                                    }
+
+                                    <div className="flex items-center gap-3">
+                                        {
+                                            showInput ? (
+                                                <span
+                                                    className="text-black text-sm font-semibold cursor-pointer"
+                                                    onClick={() => setShowInput(false)}
+                                                >
+                                                    Hủy thay đổi
+                                                </span>
+                                            ) : (
+                                                <span
+                                                    className="text-sm underline text-[#db4444] font-semibold cursor-pointer"
+                                                    onClick={() => setShowInput(true)}
+                                                >
+                                                    Thay đổi địa chỉ nhận hàng
+                                                </span>
+                                            )
+                                        }
+                                    </div>
                                 </div>
                             </div>
 

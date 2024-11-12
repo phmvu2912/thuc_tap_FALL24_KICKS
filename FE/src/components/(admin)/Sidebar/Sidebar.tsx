@@ -30,6 +30,7 @@ const Sidebar = () => {
         getItem(<NavLink to={'/admin'}>Bảng diều khiển</NavLink>, '1', <PieChartOutlined />),
         getItem(<NavLink to={'/admin/products'}>Quản lý sản phẩm</NavLink>, '2', <DesktopOutlined />),
         getItem(<NavLink to={'/admin/categories'}>Quản lý danh mục</NavLink>, '3', <DesktopOutlined />),
+        getItem(<NavLink to={'/admin/users'}>Quản lý người dùng</NavLink>, '4', <DesktopOutlined />),
         // getItem('User', 'sub1', <UserOutlined />, [
         //     getItem('Tom', '3'),
         //     getItem('Bill', '4'),

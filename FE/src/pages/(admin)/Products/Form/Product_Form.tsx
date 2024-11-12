@@ -1,8 +1,8 @@
-import { BackwardOutlined, DeleteFilled, QuestionCircleOutlined } from "@ant-design/icons";
+import { BackwardOutlined, DeleteFilled, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Image, Input, message, Select, Tooltip } from "antd";
+import { Button, Form, Image, Input, message, Select, Tooltip, Upload, UploadFile, UploadProps } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createProduct, getProductById, updateProduct } from "../../../../services/product";
 import { getCategories } from "../../../../services/category";
 
@@ -10,6 +10,7 @@ const Product_Form = () => {
 
     const [form] = Form.useForm();
     const { id } = useParams();
+    const [fileLists, setFileLists] = useState<any>({});
 
     // call api product
     const { data: product, isError, error, isFetching, isLoading } = useQuery({
@@ -52,7 +53,7 @@ const Product_Form = () => {
             message.success('Thành công');
 
             !id && form.resetFields();
-            
+
         }
     })
 
@@ -71,19 +72,36 @@ const Product_Form = () => {
         }
     }, [product, form, id]);
 
+    // xử lý ảnh
+    const handleChange = (index: any) => ({ fileList: newFileList }: any) => {
+        setFileLists((prevFileLists: any) => ({
+            ...prevFileLists,
+            [index]: newFileList.slice(-1), // Giữ lại file cuối cùng
+        }));
+    };
+
     // call api
     const onFinish = (dataForm: any) => {
-
-        const sizes = Array.isArray(dataForm.sizes) 
-        ? dataForm.sizes.join(",")  // Nếu sizes là mảng, chuyển thành chuỗi
-        : dataForm.sizes; 
-
+        const sizes = Array.isArray(dataForm.sizes)
+            ? dataForm.sizes.join(",")
+            : dataForm.sizes;
         const sizeArray = sizes.split(",").map((size: any) => size.trim());
 
-        mutate(id ? { ...dataForm, sizes: sizeArray, id } : {
-            ...dataForm, sizes: sizeArray
-        });
-    }
+        const variants = dataForm.variants.map((variant: any, index: any) => ({
+            ...variant,
+            thumbnail: fileLists[index]?.[0]?.response?.secure_url || "", // Lấy URL từ fileLists
+        }));
+
+        const data = {
+            ...dataForm,
+            sizes: sizeArray,
+            variants,
+            ...(id && { id })
+        };
+
+        mutate(data);
+    };
+
 
     if (isLoading && isFetching) return <p>Loading...</p>
     if (isError) return <p>Error: {error.message}</p>
@@ -115,18 +133,6 @@ const Product_Form = () => {
                     >
                         <Input />
                     </Form.Item>
-
-                    {/* Category */}
-                    {/* <Form.Item
-                        label="Danh mục"
-                        name='category'
-                        rules={[{ required: true, message: 'Please select a category!' }]} // Cập nhật thông báo lỗi
-                    >
-                        <Select
-                            placeholder="Select an option"
-                            options={categories?.data?.data.map((item: any) => ({ label: item.name, value: item._id }))}
-                        />
-                    </Form.Item> */}
 
                     <Form.Item
                         label="Danh mục"
@@ -233,35 +239,30 @@ const Product_Form = () => {
                                                         <Image
                                                             src={thumbnail}
                                                             alt="Thumbnail"
+                                                            width={200}
                                                         />
                                                     ) : null;
                                                 }}
                                             </Form.Item>
 
                                             {/* Thêm mới ảnh */}
-                                            {/* <Form.Item
-                                                label={
-                                                    <span className="">Ảnh sản phẩm</span>
-                                                }
-                                                name={[name, 'thumbnail']}
-                                                rules={[{ required: true, message: 'Vui lòng nhập ảnh sản phẩm biến thể!' }]}
-                                            >
-                                                <Dragger
-                                                    name="file"
-                                                    multiple={false}
-                                                    beforeUpload={() => false} // Ngăn không cho tự động upload
-                                                    showUploadList={false}
-                                                    accept="image/*"
+                                            <Form.Item label="Thêm mới ảnh sản phẩm" name={['variants', name, 'thumbnail']}>
+                                                <Upload
+                                                    action="https://api.cloudinary.com/v1_1/phmvu2912/image/upload"
+                                                    data={{ upload_preset: 'kicks_shop' }}
+                                                    onChange={handleChange(name)}
+                                                    fileList={fileLists[name] || []}
+                                                    listType="picture-card"
+                                                    maxCount={1}
                                                 >
-                                                    <p className="ant-upload-drag-icon">
-                                                        <DeleteFilled />
-                                                    </p>
-                                                    <p className="ant-upload-text">Nhấp để tải lên hình ảnh</p>
-                                                    <p className="ant-upload-hint">
-                                                        Hỗ trợ các định dạng .jpg, .png, .gif...
-                                                    </p>
-                                                </Dragger>
-                                            </Form.Item> */}
+                                                    {(fileLists[name] || []).length < 1 && (
+                                                        <button style={{ border: 0, background: 'none' }} type="button">
+                                                            <PlusOutlined />
+                                                            <div style={{ marginTop: 8 }}>Upload</div>
+                                                        </button>
+                                                    )}
+                                                </Upload>
+                                            </Form.Item>
 
 
 

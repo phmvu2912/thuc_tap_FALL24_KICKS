@@ -14,6 +14,8 @@ import Cart from '../pages/(client)/Cart/Cart'
 import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
 import Category_Form from '../pages/(admin)/Categories/Form/Category_Form'
+import List_Users from '../pages/(admin)/Users/List/List_Users'
+import Form_User from '../pages/(admin)/Users/Form/Form_User'
 
 const Routing = () => {
     return (
@@ -52,6 +54,10 @@ const Routing = () => {
                     <Route path='/admin/categories' element={<Categories_List />} />
                     <Route path='/admin/category/create' element={<Category_Form />} />
                     <Route path='/admin/category/update/:id' element={<Category_Form />} />
+
+                    {/* route users */}
+                    <Route path='/admin/users' element={<List_Users />} />
+                    <Route path='/admin/user/update/:id' element={<Form_User />} />
                 </Route>
 
                 {/* Route Auth */}

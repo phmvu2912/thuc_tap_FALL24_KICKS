@@ -113,17 +113,17 @@ const Details = () => {
 
                 {/* Ảnh */}
                 <div className="left flex w-[60%] space-x-4 h-full">
-                    <div className={`${styles['subImgs']} flex flex-col space-y-4 cursor-pointer`}>
+                    <div className={`${styles['subImgs']} space-y-4 cursor-pointer `}>
                         {
                             product?.variants?.map((variant: any, index: number) => (
-                                <div className={`${styles['img']} flex-1`} key={index} onClick={() => handleChangeImg(variant.thumbnail)}>
+                                <div className={`${styles['img']} bg-[#e3dfdf] rounded-md flex-1`} key={index} onClick={() => handleChangeImg(variant.thumbnail)}>
                                     <img src={variant.thumbnail} alt="product" />
                                 </div>
                             ))
                         }
                     </div>
 
-                    <div className={`${styles['mainImg']} w-full`}>
+                    <div className={`${styles['mainImg']} w-full bg-[#e3dfdf] rounded-md`}>
                         {
                             isFetching ? (
                                 <Spin tip="Loading" size='large' />
