@@ -23,3 +23,15 @@ export const addItemToCart = async (dataForm: any) => {
         console.log(error)
     }
 }
+
+export const removeItemFromCart = async (dataForm: any) => {
+    try {
+        
+        const data = await instacnce.post(`/carts/remove-item`, dataForm);
+
+        return data;
+
+    } catch (error) {
+        console.log(error)
+    }
+}

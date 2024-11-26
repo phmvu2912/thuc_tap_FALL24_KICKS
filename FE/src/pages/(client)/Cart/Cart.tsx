@@ -1,10 +1,12 @@
 import { DeleteFilled } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { Button, Image, Input, Table } from "antd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Image, Input, message, Table } from "antd";
 import { useState } from "react";
-import { getCartById } from "../../../services/cart";
+import { getCartById, removeItemFromCart } from "../../../services/cart";
 
 const Cart = () => {
+
+    const queryClient = useQueryClient();
 
     const [showInput, setShowInput] = useState(false)
 
@@ -13,11 +15,28 @@ const Cart = () => {
 
     const user = userSession ? JSON.parse(userSession) : null;
 
-    // console.log(user?.user?._id);
+    console.log(user?.user?._id);
 
     const { data, isError, error, isFetching, isLoading } = useQuery({
         queryKey: ['carts'],
         queryFn: () => getCartById(user?.user?._id)
+    });
+
+    const { mutate } = useMutation({
+        mutationFn: async (dataForm: any) => {
+            try {
+                await removeItemFromCart(dataForm)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['carts']
+            });
+            
+            return message.success('Xóa sản phẩm khỏi giỏ hàng thành công!');
+        }
     })
 
     console.log(data?.data?.cart)
@@ -92,7 +111,7 @@ const Cart = () => {
                     {/* delete */}
                     <Button
                         className='btn bg-red-500 py-1 px-4 rounded-md text-white w-16'
-                        // onClick={() => handleRemove(item)}
+                        onClick={() => handleRemove(item)}
                         icon={<DeleteFilled />}
                     />
                 </div>
@@ -101,8 +120,12 @@ const Cart = () => {
         },
     ];
 
-    if (isLoading && isFetching) return <p>Loading...</p>
-    if (isError) return <p>Error: {error.message}</p>
+    const handleRemove = (item: any) => {
+        mutate({...item, userId: user?.user?._id});
+    }
+
+    if (isLoading && isFetching) return <div className="min-h-screen flex justify-center items-center">Loading...</div>
+    // if (isError) return <p>Error: {error.message}</p>
 
     return (
         <>
@@ -110,7 +133,7 @@ const Cart = () => {
             <div className="container mx-auto my-20">
                 <div className="">
                     <div className="heading">
-                        <h3 className="text-2xl font-bold text-[#db4444]">Giỏ hàng [{dataSource?.length}]</h3>
+                        <h3 className="text-2xl font-bold text-[#db4444]">Giỏ hàng [{dataSource?.length ? dataSource?.length : '0'}]</h3>
                     </div>
 
                     <div className="content py-6 flex gap-6">
@@ -190,6 +213,10 @@ const Cart = () => {
                         </div>
                     </div>
                 </div>
+
+
+
+
             </div>
         </>
     )

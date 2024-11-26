@@ -16,6 +16,7 @@ import Register from '../pages/auth/Register'
 import Category_Form from '../pages/(admin)/Categories/Form/Category_Form'
 import List_Users from '../pages/(admin)/Users/List/List_Users'
 import Form_User from '../pages/(admin)/Users/Form/Form_User'
+import Profile from '../pages/(client)/Profile/Profile'
 
 const Routing = () => {
     return (
@@ -38,6 +39,12 @@ const Routing = () => {
 
                     {/* Cart */}
                     <Route path='/cart' element={<Cart />} />
+
+                    {/* Profile */}
+                    <Route path='/profile' element={<Profile />} >
+                        <Route index element={<h1>Index</h1>} />
+                        <Route path='/profile/update' element={<h1>Update</h1>} />
+                    </Route>
 
                 </Route>
 

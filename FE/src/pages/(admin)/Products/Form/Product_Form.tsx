@@ -1,10 +1,10 @@
 import { BackwardOutlined, DeleteFilled, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Image, Input, message, Select, Tooltip, Upload, UploadFile, UploadProps } from "antd";
-import { Link, useParams } from "react-router-dom";
+import { Button, Form, Image, Input, message, Select, Tooltip, Upload } from "antd";
 import { useEffect, useState } from "react";
-import { createProduct, getProductById, updateProduct } from "../../../../services/product";
+import { Link, useParams } from "react-router-dom";
 import { getCategories } from "../../../../services/category";
+import { createProduct, getProductById, updateProduct } from "../../../../services/product";
 
 const Product_Form = () => {
 

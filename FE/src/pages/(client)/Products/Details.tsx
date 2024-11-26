@@ -1,4 +1,4 @@
-import { CarOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import { CarOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Carousel, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
@@ -6,15 +6,15 @@ import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { TCart } from '../../../interfaces/cart'
 import { TVariants } from '../../../interfaces/product'
+import { addItemToCart } from '../../../services/cart'
 import { getProductById } from '../../../services/product'
 import styles from './scss/details.module.scss'
-import { addItemToCart } from '../../../services/cart'
 
 const Details = () => {
 
     const { id } = useParams();
 
-    const { register, handleSubmit, reset, setValue } = useForm<TCart>();
+    const { register, handleSubmit, setValue } = useForm<TCart>();
 
     const [activeItem, setActiveItem] = useState();
 
@@ -30,7 +30,10 @@ const Details = () => {
     });
 
     const { mutate } = useMutation({
-        mutationFn: (dataForm) => addItemToCart(dataForm)
+        mutationFn: (dataForm) => addItemToCart(dataForm),
+        onSuccess: () => {
+            message.success('Thêm sản phẩm vào giỏ hàng thành công!');
+        },
     })
 
     const product = data?.data?.data;
@@ -204,7 +207,7 @@ const Details = () => {
                         className="actions flex gap-4"
                     >
                         <div className="flex-1 flex items-stretch gap-4">
-                            <div className={`${styles['quantity']} w-full`}>
+                            <div className={`${styles['quantity']} w-[40%]`}>
 
                                 <input
                                     className='w-full h-full text-center font-semibold'
@@ -227,6 +230,7 @@ const Details = () => {
                                     htmlType='submit'
                                     className={
                                         `
+                                        py-2
                                         w-full 
                                         h-full 
                                         bg-[#DB4444] 
@@ -246,7 +250,7 @@ const Details = () => {
                             </div>
                         </div>
 
-                        <div className="">
+                        {/* <div className="">
                             <Button
                                 htmlType='submit'
                                 className={`
@@ -275,7 +279,7 @@ const Details = () => {
                             >
                                 <ShoppingCartOutlined />
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* services */}
